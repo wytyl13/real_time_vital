@@ -1,0 +1,3 @@
+host: real_time_vital_analyze_redis
+port: 6379
+database_type: redis

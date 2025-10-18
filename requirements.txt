@@ -1,0 +1,10 @@
+git+https://github.com/wytyl13/agent.git@weiyutao
+redis
+paho-mqtt
+websockets
+
+fastapi
+uvicorn
+
+# sms verication
+alibabacloud_dysmsapi20170525>=3.0.0

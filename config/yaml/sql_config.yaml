@@ -1,0 +1,7 @@
+host: real_time_vital_analyze_postgres
+port: 5432
+username: postgres
+password: "123456"
+database: sleep_monitor_db
+table: sx_device_wavve_vital_sign_log
+database_type: postgres

@@ -1,0 +1,5 @@
+host: "1.71.15.102"
+port: 8083
+username: "admin"
+password: "sxkj@123456"
+database_type: "/mqtt"
