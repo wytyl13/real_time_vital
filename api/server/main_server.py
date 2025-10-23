@@ -21,6 +21,7 @@ import os
 from api.server.base.user_data_server import UserDataServer
 from api.server.base.device_info_server import DeviceInfoServer
 from api.server.base.sms_verication_api import SMSVerificationServer
+from api.server.base.health_report_server import HealthReportServer
 
 
 
@@ -70,6 +71,7 @@ class AeroSenseMainServer:
         self.user_service = UserDataServer(self.sql_config_path)
         self.device_info_service = DeviceInfoServer(self.sql_config_path)
         self.sms_verification_server = SMSVerificationServer(env_path=ENV_PATH, redis_config_path=REDIS_CONFIG_PATH)
+        self.health_report_server = HealthReportServer(self.sql_config_path)
 
         # self.file_service = FileServer(str(ROOT_DIRECTORY / "api" / "source"))
         # self.menu_service = MenuDataServer(self.sql_config_path)
@@ -145,8 +147,11 @@ class AeroSenseMainServer:
         # 注册设备信息管理服务路由
         self.device_info_service.register_routes(self.app)
         
-        # 注意短信发送、验证服务
+        # 注册短信发送、验证服务
         self.sms_verification_server.register_routes(self.app)
+
+        # 注册睡眠报告服务
+        self.health_report_server.register_routes(self.app)
 
         # # 注册菜单服务
         # self.menu_service.register_routes(self.app)

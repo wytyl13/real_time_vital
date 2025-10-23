@@ -16,6 +16,8 @@ from urllib.parse import parse_qs, urlparse
 import weakref
 from pathlib import Path
 import ssl
+import aiohttp
+from zoneinfo import ZoneInfo
 
 import websockets
 import redis.asyncio as redis
@@ -31,6 +33,10 @@ logging.basicConfig(
     format='%(asctime)s [%(levelname)s] [%(name)s] - %(message)s',
     datefmt='%Y-%m-%d %H:%M:%S'
 )
+
+device_api_url = "https://ai.shunxikj.com:9039/api/device_info"
+device_api_update_url = "https://ai.shunxikj.com:9039/api/device_info/update"
+
 
 class WebSocketClient:
     """WebSocket 客户端包装类"""
@@ -89,7 +95,9 @@ class WebSocketRedisBridge:
         redis_config: SqlConfig = None, 
         websocket_config: SqlConfig = None,
         ssl_cert_path: str = None, 
-        ssl_key_path: str = None
+        ssl_key_path: str = None,
+        device_status_check_interval: int = 30,
+        
     ):
         # 配置
         self.redis_config = redis_config
@@ -98,6 +106,14 @@ class WebSocketRedisBridge:
             raise ValueError("redis_config must not be null!")
         if self.websocket_config is None:
             raise ValueError("websocket_config must not be null!")
+        
+        
+        # 设备状态管理
+        self.device_status_check_interval = device_status_check_interval
+        self.active_devices: Dict[str, datetime] = {}
+        self.device_status_check_task = None  # 设备状态检查任务
+        self.device_online_timeout = 60  # 设备无数据超过此秒数视为离线
+        
         # 状态
         self.clients: Dict[str, WebSocketClient] = {}
         self.redis_client = None
@@ -172,6 +188,9 @@ class WebSocketRedisBridge:
             
             # 启动 Redis 订阅任务
             self.redis_task = asyncio.create_task(self.redis_subscribe_loop())
+            
+            # 启动设备状态检查任务
+            self.device_status_check_task = asyncio.create_task(self.device_status_check_loop())
             
             # 启动 WebSocket 服务器
             server_kwargs = {
@@ -296,7 +315,6 @@ class WebSocketRedisBridge:
             self.logger.info(f"👥 当前连接数: {len(self.clients)}")
     
     
-    
     async def handle_client_message(self, client: WebSocketClient, raw_message: str):
         """处理客户端消息"""
         try:
@@ -365,6 +383,12 @@ class WebSocketRedisBridge:
             device_id = data.get('device_id', 'unknown')
             timestamp = data.get('timestamp', 'unknown')
             
+            # 新增：记录设备活跃状态
+            if device_id and device_id != 'unknown':
+                self.active_devices[device_id] = time.time() # 存储时间戳（如 1750625445.123）
+                self.logger.debug(f"🔄 更新设备活跃状态: {device_id}")
+            
+            
             self.logger.info(f"📢 Redis 消息 [{channel}]: 设备={device_id}, 时间={timestamp}")
             
             # 发送给所有匹配的客户端
@@ -407,6 +431,194 @@ class WebSocketRedisBridge:
         except Exception as e:
             self.logger.error(f"❌ 处理 Redis 消息错误: {e}")
     
+    
+    # ============================= 设备状态检查功能开始 =============================
+    async def fetch_devices_from_api(self) -> Optional[list]:
+        """从API获取所有设备信息"""
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    device_api_url,
+                    json={},
+                    ssl=False,  # 如果证书有问题可以设置为False
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    if response.status == 200:
+                        result = await response.json()
+                        if result.get('success'):
+                            devices = result.get('data', [])
+                            self.logger.info(f"📥 成功获取 {len(devices)} 个设备信息")
+                            return devices
+                        else:
+                            self.logger.error(f"❌ API返回失败: {result}")
+                            return None
+                    else:
+                        self.logger.error(f"❌ API请求失败，状态码: {response.status}")
+                        return None
+                        
+        except asyncio.TimeoutError:
+            self.logger.error("❌ 获取设备信息超时")
+            return None
+        except Exception as e:
+            self.logger.error(f"❌ 获取设备信息异常: {e}")
+            return None
+    
+    
+    async def update_device_status_in_db(self, device_sn: str, new_status: str, offline_time: Optional[str] = None):
+        """更新数据库中的设备状态"""
+        try:
+            update_data = {
+                'device_sn': device_sn,
+                'device_status': new_status
+            }
+            
+            # 如果变为离线，添加离线时间
+            if new_status == 'offline' and offline_time:
+                update_data['offline_time'] = offline_time
+            
+            async with aiohttp.ClientSession() as session:
+                async with session.post(
+                    device_api_update_url,
+                    json=update_data,
+                    ssl=False,
+                    timeout=aiohttp.ClientTimeout(total=10)
+                ) as response:
+                    if response.status == 200:
+                        result = await response.json()
+                        if result.get('success'):
+                            self.logger.info(f"✅ 设备状态已更新: {device_sn} -> {new_status}")
+                            return True
+                        else:
+                            self.logger.error(f"❌ 更新设备状态失败: {result}")
+                            return False
+                    else:
+                        self.logger.error(f"❌ 更新请求失败，状态码: {response.status}")
+                        return False
+                        
+        except Exception as e:
+            self.logger.error(f"❌ 更新设备状态异常 {device_sn}: {e}")
+            return False
+    
+    
+    def is_device_online(self, device_sn: str) -> bool:
+        """判断设备是否在线（基于最近是否有实时数据）"""
+        if device_sn not in self.active_devices:
+            return False
+        
+        last_active_timestamp = self.active_devices[device_sn]
+        now_timestamp = time.time()  # 当前时间戳
+        time_since_active = now_timestamp - last_active_timestamp # 直接相减得秒数
+        
+        # 如果超过设定的超时时间，认为离线
+        is_online = time_since_active <= self.device_online_timeout
+        
+        if not is_online:
+            self.logger.debug(f"🔴 设备 {device_sn} 超时未活跃 ({time_since_active:.0f}秒)")
+        
+        return is_online
+    
+    
+    async def device_status_check_loop(self):
+        """设备状态检查循环"""
+        self.logger.info(f"🔄 启动设备状态检查循环 (间隔: {self.device_status_check_interval}秒)...")
+        
+        # 等待服务完全启动
+        await asyncio.sleep(5)
+        
+        while self.running:
+            try:
+                self.logger.info("🔍 开始检查设备状态...")
+                
+                # 1. 从API获取所有设备
+                devices = await self.fetch_devices_from_api()
+                
+                if devices is None:
+                    self.logger.warning("⚠️  无法获取设备列表，跳过本次检查")
+                    await asyncio.sleep(self.device_status_check_interval)
+                    continue
+                
+                # 2. 检查每个设备的状态
+                status_changes = []
+                
+                for device in devices:
+                    device_sn = device.get('device_sn')
+                    db_status = device.get('device_status')  # 数据库中的状态
+                    
+                    if not device_sn:
+                        continue
+                    
+                    # 判断实际在线状态
+                    is_online = self.is_device_online(device_sn)
+                    actual_status = 'online' if is_online else 'offline'
+                    
+                    # 比对状态是否一致
+                    status_changed = False
+                    
+                    # 数据库状态可能有多种值，我们主要关心 online/offline
+                    # 如果数据库状态不是这两者之一，也可能需要更新
+                    if is_online and db_status != 'online':
+                        # 实际在线，但数据库不是online状态
+                        status_changed = True
+                        status_changes.append({
+                            'device_sn': device_sn,
+                            'device_name': device.get('device_name', 'Unknown'),
+                            'old_status': db_status,
+                            'new_status': 'online'
+                        })
+                        
+                    elif not is_online and db_status == 'online':
+                        # 实际离线，但数据库是online状态
+                        status_changed = True
+                        offline_timestamp_ms = int(time.time() * 1000)
+                        status_changes.append({
+                            'device_sn': device_sn,
+                            'device_name': device.get('device_name', 'Unknown'),
+                            'old_status': db_status,
+                            'new_status': 'offline',
+                            'offline_time': offline_timestamp_ms
+                        })
+                
+                # 3. 批量更新状态变化的设备
+                if status_changes:
+                    self.logger.info(f"📊 发现 {len(status_changes)} 个设备状态需要更新")
+                    
+                    for change in status_changes:
+                        device_sn = change['device_sn']
+                        new_status = change['new_status']
+                        offline_time = change.get('offline_time')
+                        
+                        self.logger.info(
+                            f"🔄 {change['device_name']} ({device_sn}): "
+                            f"{change['old_status']} -> {new_status}"
+                        )
+                        
+                        # 更新数据库
+                        await self.update_device_status_in_db(device_sn, new_status, offline_time)
+                        
+                        # 短暂延迟，避免过快请求
+                        await asyncio.sleep(0.1)
+                else:
+                    self.logger.info("✅ 所有设备状态一致，无需更新")
+                
+                # 4. 清理长时间未活跃的设备记录（可选）
+                now_timestamp = time.time()
+                inactive_devices = [
+                    device_sn for device_sn, last_time in self.active_devices.items()
+                    if (now_timestamp - last_time) > 3600  # 1小时无活动则清理
+                ]
+                
+                for device_sn in inactive_devices:
+                    del self.active_devices[device_sn]
+                    self.logger.debug(f"🧹 清理长时间未活跃设备记录: {device_sn}")
+                
+                self.logger.info(f"✅ 设备状态检查完成，{self.device_status_check_interval}秒后再次检查")
+                
+            except Exception as e:
+                self.logger.error(f"❌ 设备状态检查错误: {e}")
+            
+            # 等待下次检查
+            await asyncio.sleep(self.device_status_check_interval)
+    # ============================= 设备状态检查功能结束 =============================
     
     
     async def heartbeat_loop(self):

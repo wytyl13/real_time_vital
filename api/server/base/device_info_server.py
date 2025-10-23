@@ -18,6 +18,7 @@ from typing import (
 from fastapi.encoders import jsonable_encoder
 import asyncio
 import json
+from datetime import datetime
 
 from api.table.base.device_info import DeviceInfo
 from agent.provider.sql_provider import SqlProvider
@@ -36,6 +37,8 @@ class ListDeviceInfo(BaseModel):
     wifi_password: Optional[str] = None
     topic: Optional[str] = None
     device_status: Optional[str] = None
+    subscription_status: Optional[str] = None
+    offline_time: Optional[int] = None
     user_name: Optional[str] = None
     tenant_id: Optional[int] = None
 
@@ -56,11 +59,15 @@ class DeviceInfoServer:
         app.post("/api/device_info/update")(self.update_device_info)
         app.post("/api/device_info/delete")(self.delete_device_info)
 
+
     async def get_device_info(
         self,
-        device_sn: Optional[str] = None,
         id: Optional[int] = None,
+        device_sn: Optional[str] = None,
         user_name: Optional[str] = None,
+        device_status: Optional[str] = None,
+        subscription_status: Optional[str] = None,
+
     ):
         """
         GET请求 - 支持获取所有设备（不传递任何参数）信息，支持获取指定设备（在url中传递device_sn参数）信息
@@ -69,7 +76,6 @@ class DeviceInfoServer:
         - GET /api/device_info?device_sn=DEV001 -> 获取DEV001设备的信息
         """
         condition = {}
-        print(f"condition: ---------------------- {condition}")
         if device_sn is not None:
             condition["device_sn"] = device_sn
         
@@ -79,11 +85,33 @@ class DeviceInfoServer:
         if user_name is not None:
             condition["user_name"] = user_name
             
+        if device_status is not None:
+            condition["device_status"] = device_status
+            
+        if subscription_status is not None:
+            condition["subscription_status"] = subscription_status
+
+        print(f"condition: ---------------------- {condition}")
         try:
             sql_provider = SqlProvider(model=DeviceInfo, sql_config_path=self.sql_config_path)
             result = await sql_provider.get_record_by_condition(
                 condition=condition,
-                fields=["id", "device_sn", "device_type", "device_name", "device_location", "wifi_name", "wifi_password", "topic", "device_status", "user_name", "create_time", "tenant_id"]
+                fields=[
+                    "id", 
+                    "device_sn", 
+                    "device_type", 
+                    "device_name", 
+                    "device_location", 
+                    "wifi_name", 
+                    "wifi_password", 
+                    "topic", 
+                    "device_status", 
+                    "subscription_status", 
+                    "offline_time", 
+                    "user_name", 
+                    "create_time", 
+                    "tenant_id"
+                ]
             )
             json_compatible_result = jsonable_encoder(result)
             
@@ -118,13 +146,21 @@ class DeviceInfoServer:
             device_sn = list_device_info.device_sn
             id = list_device_info.id
             user_name = list_device_info.user_name
+            subscription_status = list_device_info.subscription_status # 订阅状态
+            device_status = list_device_info.device_status # 在线状态
         except Exception as e:
             return JSONResponse(
                 status_code=400,
                 content={"success": False, "message": f"传参错误！{str(e)}", "data": None, "timestamp": datetime.now().isoformat()}
             )
         try:
-            result = await self.get_device_info(device_sn=device_sn, id=id, user_name=user_name)
+            result = await self.get_device_info(
+                id=id, 
+                device_sn=device_sn, 
+                user_name=user_name, 
+                subscription_status=subscription_status, 
+                device_status=device_status
+            )
             return result
         except Exception as e:
             return JSONResponse(
@@ -132,7 +168,7 @@ class DeviceInfoServer:
                 content={"success": False, "message": f"获取设备数据失败: {str(e)}", "timestamp": datetime.now().isoformat()}
             )
 
-    
+
     async def save_device_info(
         self,
         list_device_info: ListDeviceInfo,
@@ -209,12 +245,22 @@ class DeviceInfoServer:
             if hasattr(list_device_info, 'device_status') and list_device_info.device_status:
                 insert_data["device_status"] = list_device_info.device_status
             else:
-                insert_data["device_status"] = "pending_subscription"
+                insert_data["device_status"] = "offline"
+                
+            if hasattr(list_device_info, 'subscription_status') and list_device_info.subscription_status:
+                insert_data["subscription_status"] = list_device_info.subscription_status
+            else:
+                insert_data["subscription_status"] = "pending"
                 
             if hasattr(list_device_info, 'tenant_id') and list_device_info.tenant_id is not None:
                 insert_data["tenant_id"] = list_device_info.tenant_id
             else:
                 insert_data["tenant_id"] = 0
+
+            if hasattr(list_device_info, 'offline_time') and list_device_info.tenant_id is not None:
+                insert_data["offline_time"] = list_device_info.offline_time
+            else:
+                insert_data["offline_time"] = None
             
             sql_provider = SqlProvider(model=DeviceInfo, sql_config_path=self.sql_config_path)
             result = await sql_provider.add_record(insert_data)
@@ -261,8 +307,14 @@ class DeviceInfoServer:
                 )
             response_str_title = f"设备编号：{list_device_info.device_sn}" if list_device_info.device_sn else f"设备id：{list_device_info.id}"
             
+            device_identifier: ListDeviceInfo = ListDeviceInfo(
+                id=list_device_info.id,
+                device_sn=list_device_info.device_sn
+            )
+            
+            
             # 查询现有设备数据
-            response = await self.post_device_info(list_device_info)
+            response = await self.post_device_info(device_identifier)
             
             result = utils.parse_server_return(response)
             
@@ -326,12 +378,22 @@ class DeviceInfoServer:
             if hasattr(list_device_info, 'device_status') and list_device_info.device_status:
                 insert_data["device_status"] = list_device_info.device_status
             else:
-                insert_data["device_status"] = response.get("device_status", "pending_subscription")
+                insert_data["device_status"] = response.get("device_status", "offline")
+                
+            if hasattr(list_device_info, 'subscription_status') and list_device_info.subscription_status:
+                insert_data["subscription_status"] = list_device_info.subscription_status
+            else:
+                insert_data["subscription_status"] = response.get("subscription_status", "pending_subscription")
                 
             if hasattr(list_device_info, 'tenant_id') and list_device_info.tenant_id is not None:
                 insert_data["tenant_id"] = list_device_info.tenant_id
             else:
                 insert_data["tenant_id"] = response.get("tenant_id", 0)
+
+            if hasattr(list_device_info, 'offline_time') and list_device_info.offline_time is not None:
+                insert_data["offline_time"] = list_device_info.offline_time
+            else:
+                insert_data["offline_time"] = response.get("offline_time", None)
             
             # 更新记录
             sql_provider = SqlProvider(model=DeviceInfo, sql_config_path=self.sql_config_path)
@@ -378,11 +440,15 @@ class DeviceInfoServer:
                     content={"success": False, "message": f"请提供要删除的设备编号或id", "timestamp": datetime.now().isoformat()}
                 )
             
+            device_identifier: ListDeviceInfo = ListDeviceInfo(
+                id=list_device_info.id,
+                device_sn=list_device_info.device_sn
+            )
+            
             # 查询设备是否存在
-            response = await self.post_device_info(list_device_info)
+            response = await self.post_device_info(device_identifier)
             
             result = utils.parse_server_return(response)
-            print(result)
             response_str_title = f"设备编号：{list_device_info.device_sn}" if list_device_info.device_sn else f"设备id：{list_device_info.id}"
             if not result:
                 return JSONResponse(

@@ -163,11 +163,11 @@ class UserDataServer:
                     content={"success": False, "message": f"请提供密码", "timestamp": datetime.now().isoformat()}
                 )
             
-            if not list_user_data.full_name:
-                return JSONResponse(
-                    status_code=400,
-                    content={"success": False, "message": f"请提供姓名", "timestamp": datetime.now().isoformat()}
-                )
+            # if not list_user_data.full_name:
+            #     return JSONResponse(
+            #         status_code=400,
+            #         content={"success": False, "message": f"请提供姓名", "timestamp": datetime.now().isoformat()}
+            #     )
                 
             if list_user_data.id:
                 return JSONResponse(
