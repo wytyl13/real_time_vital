@@ -14,6 +14,7 @@ from typing import (
     Optional,
     Dict
 )
+import sys
 from enum import Enum
 import jieba
 import numpy as np
@@ -24,6 +25,7 @@ from agent.utils.log import Logger
 from rich.console import Console
 from rich.table import Table
 from io import StringIO
+import logging
 
 logger = Logger('Utils')
 
@@ -202,6 +204,31 @@ class Utils:
             
         except Exception as e:
             return str(e)
+    
+    
+    def setup_logger(self, name: str = "SleepDataStorage") -> logging.Logger:
+        """创建自定义logger"""
+        logger = logging.getLogger(name)
+        
+        # 避免重复添加handler
+        if logger.handlers:
+            return logger
+        
+        logger.setLevel(logging.INFO)
+        
+        # 创建控制台处理器
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(logging.INFO)
+        
+        # 创建格式器
+        formatter = logging.Formatter(
+            '[%(asctime)s] [%(levelname)-8s] [%(name)s] - %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S'
+        )
+        handler.setFormatter(formatter)
+        
+        logger.addHandler(handler)
+        return logger
     
 
     def request_url_(self, url: str, param_dict: Dict, method: Optional[str] = "POST"):

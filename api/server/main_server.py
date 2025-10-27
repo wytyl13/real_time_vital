@@ -22,7 +22,7 @@ from api.server.base.user_data_server import UserDataServer
 from api.server.base.device_info_server import DeviceInfoServer
 from api.server.base.sms_verication_api import SMSVerificationServer
 from api.server.base.health_report_server import HealthReportServer
-
+from api.server.base.real_time_vital_data_server import RealTimeVitalDataServer
 
 
 # from api.server.base.community_real_time_data_server import CommunityRealTimeDataServer
@@ -72,6 +72,7 @@ class AeroSenseMainServer:
         self.device_info_service = DeviceInfoServer(self.sql_config_path)
         self.sms_verification_server = SMSVerificationServer(env_path=ENV_PATH, redis_config_path=REDIS_CONFIG_PATH)
         self.health_report_server = HealthReportServer(self.sql_config_path)
+        self.real_time_vital_data_server = RealTimeVitalDataServer(self.sql_config_path)
 
         # self.file_service = FileServer(str(ROOT_DIRECTORY / "api" / "source"))
         # self.menu_service = MenuDataServer(self.sql_config_path)
@@ -152,6 +153,9 @@ class AeroSenseMainServer:
 
         # 注册睡眠报告服务
         self.health_report_server.register_routes(self.app)
+
+        # 注册实时生命体征数据服务
+        self.real_time_vital_data_server.register_routes(self.app)
 
         # # 注册菜单服务
         # self.menu_service.register_routes(self.app)

@@ -65,6 +65,7 @@ class DeviceInfoServer:
         id: Optional[int] = None,
         device_sn: Optional[str] = None,
         user_name: Optional[str] = None,
+        topic: Optional[str] = None,
         device_status: Optional[str] = None,
         subscription_status: Optional[str] = None,
 
@@ -90,6 +91,9 @@ class DeviceInfoServer:
             
         if subscription_status is not None:
             condition["subscription_status"] = subscription_status
+
+        if topic is not None:
+            condition["topic"] = topic
 
         print(f"condition: ---------------------- {condition}")
         try:
@@ -146,6 +150,7 @@ class DeviceInfoServer:
             device_sn = list_device_info.device_sn
             id = list_device_info.id
             user_name = list_device_info.user_name
+            topic = list_device_info.topic
             subscription_status = list_device_info.subscription_status # 订阅状态
             device_status = list_device_info.device_status # 在线状态
         except Exception as e:
@@ -158,6 +163,7 @@ class DeviceInfoServer:
                 id=id, 
                 device_sn=device_sn, 
                 user_name=user_name, 
+                topic=topic,
                 subscription_status=subscription_status, 
                 device_status=device_status
             )
@@ -300,16 +306,17 @@ class DeviceInfoServer:
         try:
             self.logger.info(f"收到设备数据更新请求: {list_device_info}")
             
-            if not list_device_info.device_sn and not list_device_info.id:
+            if not list_device_info.device_sn and not list_device_info.id and not list_device_info.topic:
                 return JSONResponse(
                     status_code=400,
-                    content={"success": False, "message": "请提供设备编号或id", "timestamp": datetime.now().isoformat()}
+                    content={"success": False, "message": "请提供设备编号或id或订阅主题topic", "timestamp": datetime.now().isoformat()}
                 )
             response_str_title = f"设备编号：{list_device_info.device_sn}" if list_device_info.device_sn else f"设备id：{list_device_info.id}"
             
             device_identifier: ListDeviceInfo = ListDeviceInfo(
                 id=list_device_info.id,
-                device_sn=list_device_info.device_sn
+                device_sn=list_device_info.device_sn,
+                topic=list_device_info.topic
             )
             
             

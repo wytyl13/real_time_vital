@@ -21,10 +21,14 @@ from typing import (
     TypeVar,
     Any,
     Type,
-    List
+    List,
+    Callable
 )
+import time
 from abc import ABC, abstractmethod
 from queue import Queue, Empty
+from contextlib import contextmanager
+
 
 from base.base_tool import BaseTool
 
@@ -37,7 +41,9 @@ class ConsumerToolPool(BaseTool):
     default_instances: int = 0
     regular_instances: int = 0
     topic_instances: Dict = {}
-    
+    last_log_time: float = 0
+    log_interval: float = 10.0
+    tool_factories: Dict = {}
     
     def __init__(self, model_paths: Dict[str, Any], total_pool_size=30, default_ratio=0.88):
         super().__init__()
@@ -47,9 +53,15 @@ class ConsumerToolPool(BaseTool):
         :param model_paths: 模型路径字典 {topic: model_info}
         :param max_pool_size: 每个模型最大实例数
         """
+        self.last_log_time = 0
+        self.log_interval = 10.0
+        
         self.pools = {}
         self.locks = {}
         
+        # 添加这一行
+        self.tool_factories = {}  # 存储工具工厂函数
+
         # 统计default和regular主题的数量
         default_topics = [topic for topic in model_paths.keys() if topic.startswith("default")]
         regular_topics = [topic for topic in model_paths.keys() if not topic.startswith("default")]
@@ -117,6 +129,51 @@ class ConsumerToolPool(BaseTool):
         self.logger.info(f"主题实例数详情: {self.topic_instances}")
     
     
+    @contextmanager
+    def get_tool(self, tool_name: str):
+        """
+        上下文管理器方式获取工具
+        
+        使用示例:
+            with pool.get_tool("sleep_data_storage") as tool:
+                result = tool.execute(...)
+        
+        自动处理获取和释放
+        """
+        tool = None
+        try:
+            # 获取工具
+            tool = self.get_consumer_tool(tool_name)
+            if tool is None:
+                raise ValueError(f"无法获取工具: {tool_name}")
+            
+            yield tool
+            
+        finally:
+            # 自动释放工具
+            if tool is not None:
+                try:
+                    self.release_consumer_tool(tool_name, tool)
+                    self.logger.debug(f"🔄 工具 {tool_name} 已自动放回池")
+                except Exception as e:
+                    self.logger.error(f"❌ 释放工具 {tool_name} 失败: {e}")
+    
+    
+    def add_tool(self, tool_name: str, tool_factory: Callable, pool_size: int = 1):
+        """添加工具到池"""
+        self.pools[tool_name] = Queue(maxsize=pool_size)
+        self.locks[tool_name] = threading.Lock()
+        self.tool_factories[tool_name] = tool_factory
+        
+        for _ in range(pool_size):
+            independent_instance = tool_factory()
+            self.pools[tool_name].put(independent_instance)
+        
+        self.topic_instances[tool_name] = pool_size
+        self.total_instances += pool_size
+        print(f"✅ 工具已添加: {tool_name} (池大小: {pool_size})")
+    
+    
     def get_consumer_tool_name(self, topic_model_key):
         default_topic = topic_model_key
         try:
@@ -178,7 +235,7 @@ class ConsumerToolPool(BaseTool):
             if default_topic in self.pools:
                 # 将实例放回默认主题的池中
                 self.pools[default_topic].put(consumer_tool)
-                self.logger.info(f"Released tool for {topic_model_key} back to default pool: {default_topic}")
+                # self.logger.info(f"Released tool for {topic_model_key} back to default pool: {default_topic}")
                 # 记录释放实例后的线程池状态
                 self._log_pool_status()
                 return
@@ -187,7 +244,7 @@ class ConsumerToolPool(BaseTool):
         
         # 将实例放回池中
         self.pools[topic_model_key].put(consumer_tool)
-        self.logger.info(f"Released tool for {topic_model_key} back to pool")
+        # self.logger.info(f"Released tool for {topic_model_key} back to pool")
         
         # 记录释放实例后的线程池状态
         self._log_pool_status()
@@ -201,6 +258,11 @@ class ConsumerToolPool(BaseTool):
         """
         记录所有线程池的当前状态
         """
+        current_time = time.time()
+        if current_time - self.last_log_time < self.log_interval:
+            return  # 未到间隔时间，跳过打印
+        self.last_log_time = current_time
+        
         
         default_available = 0
         regular_available = 0

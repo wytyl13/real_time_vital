@@ -14,6 +14,8 @@ from sqlalchemy.exc import OperationalError
 from api.table.base.user_data import UserData
 from api.table.base.device_info import DeviceInfo
 from api.table.base.health_report import HealthReport
+from api.table.base.real_time_vital_data import RealTimeVitalData
+
 
 # from api.table.base.community_real_time_data import CommunityRealTimeData
 # from api.table.meal_assistance_subsystem.menu_data import MenuData

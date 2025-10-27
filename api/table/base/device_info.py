@@ -27,7 +27,7 @@ class DeviceInfo(Base):
     device_location = Column(String(256), nullable=True, comment='设备位置')
     wifi_name = Column(String(128), nullable=True, comment='WiFi名称')
     wifi_password = Column(String(256), nullable=True, comment='WiFi密码')
-    topic = Column(String(256), nullable=True, comment='订阅主题')
+    topic = Column(String(256), nullable=True, unique=True, comment='订阅主题')
     device_status = Column(String(30), default='active', nullable=False, comment='设备状态: online-在线, offline-离线')
     offline_time = Column(BigInteger, nullable=True, comment='离线时间（毫秒级时间戳，NULL表示未离线）')
     user_name = Column(String(64), nullable=False, unique=False, comment='用户名')

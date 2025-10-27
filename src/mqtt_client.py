@@ -9,11 +9,13 @@ import time
 import threading
 import json
 import struct
-from typing import Optional, Callable, Dict, Any, List
+from typing import Optional, Callable, Dict, Any, List, Literal
 import paho.mqtt.client as mqtt
 from datetime import datetime
 import queue
 from collections import deque
+from enum import Enum
+
 
 from agent.base.base_tool import tool
 
@@ -63,6 +65,10 @@ class MQTTClient:
         self.username = username
         self.password = password
         self.websocket_path = websocket_path
+        
+        self.last_log_time = 0
+        self.log_interval = 10  # 10秒间隔 ← 在这里修改
+        self.message_count = 0  # 消息计数器
         
         # 状态管理
         self.is_running = False
@@ -165,21 +171,35 @@ class MQTTClient:
     def _on_message(self, client, userdata, msg):
         """MQTT消息处理（更新版本支持UART格式）"""
         try:
-            current_time_str = datetime.fromtimestamp(time.time()).strftime("%H:%M:%S")
+            current_time = time.time()
+            current_time_str = datetime.fromtimestamp(current_time).strftime("%H:%M:%S")
             
-            # 基本信息日志
-            self.log_debug(f"收到MQTT消息! 主题: {msg.topic}, 长度: {len(msg.payload)}, {current_time_str}")
             
-            # 如果是UART格式数据，显示详细调试信息
-            if len(msg.payload) == 66 and self._is_uart_format(msg.payload):
-                uart_debug = self._parse_uart_debug_info(msg.payload)
-                self.log_debug(f"UART数据详情: {uart_debug}")
+            # 消息计数器递增
+            self.message_count += 1
             
+            
+            # 检查是否需要打印日志（每10秒打印一次）
+            should_log = (current_time - self.last_log_time) >= self.log_interval  # ← 在这里使用
+            
+            if should_log:
+                # 基本信息日志
+                self.log_debug(f"收到MQTT消息! 主题: {msg.topic}, 长度: {len(msg.payload)}, {current_time_str}")
+
+                # # 如果是UART格式数据，显示详细调试信息
+                # if len(msg.payload) == 66 and self._is_uart_format(msg.payload):
+                #     uart_debug = self._parse_uart_debug_info(msg.payload)
+                #     if should_log:
+                #         self.log_debug(f"UART数据详情: {uart_debug}")
+                self.last_log_time = current_time
+                self.message_count = 0
+
             # 解析数据
             parse_data = self._parse_mqtt_data(msg.payload, msg.topic)
             
             if parse_data:
-                self.logger.info(f"解析后数据: {parse_data}")
+                if should_log:
+                    self.logger.info(f"解析后数据: {parse_data}")
                 if self.data_callback is not None and callable(self.data_callback):
                     self.data_callback(parse_data)
             
@@ -228,8 +248,8 @@ class MQTTClient:
             return False
         except Exception:
             return False
-    
-    
+
+
     def _parse_uart_payload(self, payload, topic, timestamp):
         """解析UART格式的数据包"""
         try:
@@ -299,10 +319,10 @@ class MQTTClient:
             
             # 状态值含义：
             # 0=在床, 1=离床, 2=体动, 3=弱呼吸, 4=重物, 5=打鼾
-            status_descriptions = {
-                0: "在床", 1: "离床", 2: "体动", 
-                3: "弱呼吸", 4: "重物", 5: "打鼾"
-            }
+            # status_descriptions = {
+            #     0: "在床", 1: "离床", 2: "体动", 
+            #     3: "弱呼吸", 4: "重物", 5: "打鼾"
+            # }
             
             # 根据状态判断在床情况
             in_bed = 1 if status_value == 0 else 0  # 0表示在床
@@ -311,11 +331,11 @@ class MQTTClient:
             device_id = f"UART_{topic.replace('/', '_')}"
             
             # 记录详细信息
-            self.logger.info(f"UART数据解析 - 序列号: {sequence_number}, "
-                            f"状态: {status_descriptions.get(status_value, '未知')}({status_value}), "
-                            f"心率: {heart_rate}, 呼吸率: {breathing_rate}, "
-                            f"压阻信号: {pressure_resistance}, "
-                            f"归一化信号数量: {len(signal_data)}")
+            # self.logger.info(f"UART数据解析 - 序列号: {sequence_number}, "
+            #                 f"状态: {status_descriptions.get(status_value, '未知')}({status_value}), "
+            #                 f"心率: {heart_rate}, 呼吸率: {breathing_rate}, "
+            #                 f"压阻信号: {pressure_resistance}, "
+            #                 f"归一化信号数量: {len(signal_data)}")
             
             # 返回与原格式兼容的数据结构
             return (
@@ -336,8 +356,8 @@ class MQTTClient:
         except Exception as e:
             self.logger.error(f"解析UART数据失败: {e}")
             return None
-    
-    
+
+
     def _parse_uart_payload_bake(self, payload, topic, timestamp):
         """解析UART格式的数据包"""
         try:
@@ -393,10 +413,10 @@ class MQTTClient:
             
             # 状态值含义：
             # 0=在床, 1=离床, 2=体动, 3=弱呼吸, 4=重物, 5=打鼾
-            status_descriptions = {
-                0: "在床", 1: "离床", 2: "体动", 
-                3: "弱呼吸", 4: "重物", 5: "打鼾"
-            }
+            # status_descriptions = {
+            #     0: "在床", 1: "离床", 2: "体动", 
+            #     3: "弱呼吸", 4: "重物", 5: "打鼾"
+            # }
             
             # 根据状态判断在床情况
             in_bed = 1 if status_value == 0 else 0  # 0表示在床
@@ -405,10 +425,10 @@ class MQTTClient:
             device_id = f"UART_{topic.replace('/', '_')}"
             
             # 记录详细信息
-            self.logger.info(f"UART数据解析 - 序列号: {sequence_number}, "
-                            f"状态: {status_descriptions.get(status_value, '未知')}({status_value}), "
-                            f"心率: {heart_rate}, 呼吸率: {breathing_rate}, "
-                            f"压阻信号: {pressure_resistance}")
+            # self.logger.info(f"UART数据解析 - 序列号: {sequence_number}, "
+            #                 f"状态: {status_descriptions.get(status_value, '未知')}({status_value}), "
+            #                 f"心率: {heart_rate}, 呼吸率: {breathing_rate}, "
+            #                 f"压阻信号: {pressure_resistance}")
             
             # 返回与原格式兼容的数据结构
             return (
@@ -429,8 +449,8 @@ class MQTTClient:
         except Exception as e:
             self.logger.error(f"解析UART数据失败: {e}")
             return None
-    
-    
+
+
     def _parse_uart_debug_info(self, payload):
         """解析UART数据并返回调试信息"""
         try:
@@ -475,7 +495,7 @@ class MQTTClient:
             
         except Exception as e:
             return f"调试信息解析失败: {e}"
-    
+
 
     def _parse_json_payload(self, data, topic, timestamp):
         """解析JSON格式的数据"""
@@ -627,6 +647,156 @@ class MQTTClient:
         """获取调试消息"""
         with self.lock:
             return list(self.debug_messages)
+
+
+    
+    def add_topic(self, topic: str) -> bool:
+        """
+        添加并订阅单个topic
+        
+        Args:
+            topic: 要添加的topic
+            
+        Returns:
+            bool: 订阅是否成功
+        """
+        if not self.connected:
+            self.logger.warning("MQTT客户端未连接，无法添加topic")
+            return False
+        
+        if topic in self.topics:
+            self.log_debug(f"Topic已存在: {topic}")
+            return True  # 已经订阅
+        
+        try:
+            result, mid = self.mqtt_client.subscribe(topic)
+            if result == mqtt.MQTT_ERR_SUCCESS:
+                self.topics.append(topic)
+                self.log_debug(f"成功订阅topic: {topic}")
+                return True
+            else:
+                self.log_debug(f"订阅topic失败: {topic}, 错误码: {result}")
+                self.update_subscription_status(topic=topic, subscription_status="failed")
+                return False
+        except Exception as e:
+            self.log_debug(f"订阅topic异常: {topic}, 错误: {e}")
+            return False
+
+
+    def remove_topic(self, topic: str) -> bool:
+        """
+        取消订阅单个topic
+        
+        Args:
+            topic: 要移除的topic
+            
+        Returns:
+            bool: 取消订阅是否成功
+        """
+        if not self.connected:
+            self.logger.warning("MQTT客户端未连接，无法移除topic")
+            return False
+        
+        if topic not in self.topics:
+            self.log_debug(f"Topic不存在: {topic}")
+            return True  # 本来就不存在
+        
+        try:
+            result, mid = self.mqtt_client.unsubscribe(topic)
+            if result == mqtt.MQTT_ERR_SUCCESS:
+                self.topics.remove(topic)
+                self.log_debug(f"成功取消订阅topic: {topic}")
+                return True
+            else:
+                self.log_debug(f"取消订阅topic失败: {topic}, 错误码: {result}")
+                return False
+        except Exception as e:
+            self.log_debug(f"取消订阅topic异常: {topic}, 错误: {e}")
+            return False
+
+
+    def add_topics_batch(self, new_topics: List[str]) -> Dict[str, bool]:
+        """
+        批量添加并订阅新的topics
+        
+        Args:
+            new_topics: 要添加的topic列表
+            
+        Returns:
+            Dict[str, bool]: {topic: 订阅是否成功}
+        """
+        results = {}
+        
+        for topic in new_topics:
+            results[topic] = self.add_topic(topic)
+        
+        return results
+    
+    
+    def remove_topics_batch(self, topics_to_remove: List[str]) -> Dict[str, bool]:
+        """
+        批量取消订阅topics
+        
+        Args:
+            topics_to_remove: 要移除的topic列表
+            
+        Returns:
+            Dict[str, bool]: {topic: 取消订阅是否成功}
+        """
+        results = {}
+        
+        for topic in topics_to_remove:
+            results[topic] = self.remove_topic(topic)
+        
+        return results
+    
+    
+    def get_subscribed_topics(self) -> List[str]:
+        """
+        获取当前订阅的topics列表
+        
+        Returns:
+            List[str]: 当前订阅的topic列表
+        """
+        return self.topics.copy()
+    
+    
+    def sync_topics(self, target_topics: List[str]) -> Dict[str, Any]:
+        """
+        同步topics到目标列表
+        
+        Args:
+            target_topics: 目标topic列表
+            
+        Returns:
+            Dict: 同步结果
+        """
+        current_topics = set(self.topics)
+        target_topics_set = set(target_topics)
+        
+        # 需要添加的topics
+        topics_to_add = list(target_topics_set - current_topics)
+        # 需要移除的topics
+        topics_to_remove = list(current_topics - target_topics_set)
+        
+        add_results = {}
+        remove_results = {}
+        
+        if topics_to_add:
+            add_results = self.add_topics_batch(topics_to_add)
+            self.log_debug(f"添加topics结果: {add_results}")
+        
+        if topics_to_remove:
+            remove_results = self.remove_topics_batch(topics_to_remove)
+            self.log_debug(f"移除topics结果: {remove_results}")
+        
+        return {
+            'added': add_results,
+            'removed': remove_results,
+            'current_topics': self.get_subscribed_topics(),
+            'target_topics': target_topics,
+            'sync_success': all(add_results.values()) and all(remove_results.values())
+        }
 
 
     def execute(self):

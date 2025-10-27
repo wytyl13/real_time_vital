@@ -9,11 +9,17 @@ import time
 import threading
 from typing import (
     Optional,
-    List
-    
+    List,
+    Dict,
+    Any
 )
 from enum import Enum
+import asyncio
 
+from tools.utils import Utils
+
+
+utils = Utils()
 
 class ConnectionType(Enum):
     SOCKET = "socket"
@@ -24,6 +30,7 @@ ROOT_DIRECTORY = Path(__file__).parent.parent
 MQTT_CONFIG_PATH = str(ROOT_DIRECTORY / "config" / "yaml" / "mqtt_config.yaml")
 DETECT_CONFIG_PATH = str(ROOT_DIRECTORY / "config" / "yaml" / "detect_config.yaml")
 REDIS_CONFIG_PATH = str(ROOT_DIRECTORY / "config" / "yaml" / "redis_config.yaml")
+SQL_CONFIG_PATH = str(ROOT_DIRECTORY / "config" / "yaml" / "sql_config.yaml")
 
 
 
@@ -33,7 +40,16 @@ from base.consumer_tool_pool import ConsumerToolPool
 from src.mqtt_client import MQTTClient
 
 from agent.base.base_tool import tool
+from src.sleep_data_storage import DataPoint
 
+class SubscriptionStatus(str, Enum):
+    """订阅状态枚举"""
+    PENDING = 'pending'         # 待订阅
+    SUBSCRIBED = 'subscribed'   # 已订阅
+    FAILED = 'failed'           # 失败
+    UNSUBSCRIBED = 'unsubscribed'  # 已取消
+
+update_subscription_status_url = "https://ai.shunxikj.com:9039/api/device_info/update"
 
 @tool
 class SocketServerManager(ProducerConsumerManager):
@@ -67,7 +83,22 @@ class SocketServerManager(ProducerConsumerManager):
             device_storage_redis_config=device_storage_redis_config,
             device_max_queue_size=device_max_queue_size
         )
-
+        self.device_topics = []
+        self.load_topics_from_api()
+        
+    def load_topics_from_api(self):
+        try:
+            response = utils.request_url(
+                url="https://ai.shunxikj.com:9039/api/device_info",
+                param_dict={"subscription_status": "subscribed"}
+            )
+            self.device_topics = [item["topic"] for item in response]
+        except Exception as e:
+            import traceback
+            error_info = f"Fail to exec load_topics_from_api function {traceback.format_exc()}"
+            print(error_info)
+            raise ValueError(error_info) from e
+        
 
     def start_mqtt_client(self, connection_id: str, broker_host: str, broker_port: int = 8083, 
                      topics: list = None, **kwargs):
@@ -121,8 +152,8 @@ class SocketServerManager(ProducerConsumerManager):
             'in_bed': parse_data[10] if isinstance(parse_data, tuple) and len(parse_data) > 10 else 0
         }
         self.redis_device_storage.publish_websocket_data(device_id=device_id, websocket_data=websocket_data)
-        devices = self.get_all_devices()
-        self.logger.info(f"devices: {devices}, \n ")
+        # devices = self.get_all_devices()
+        # self.logger.info(f"devices: {devices}, \n ")
         # self.logger.info(f"devices_data: {self.get_all_device_data(devices[0])}, \n ")
 
 
@@ -156,6 +187,7 @@ class SocketServerManager(ProducerConsumerManager):
                 raise ValueError("Socket connection requires 'port' parameter")
             self.start_socket_server(port)
         elif connection_type == "mqtt" or connection_type == ConnectionType.MQTT:
+            
             if not connection_id:
                 connection_id = f"mqtt_{int(time.time())}"
             broker_host = kwargs.pop('broker_host')
@@ -163,6 +195,11 @@ class SocketServerManager(ProducerConsumerManager):
                 raise ValueError("MQTT connection requires 'broker_host' parameter")
             broker_port = kwargs.pop('broker_port', 8083)
             topics = kwargs.pop('topics', [])
+            if not topics:
+                topics = self.device_topics
+                self.logger.info(f"使用从API加载的topics: {topics}")
+            else:
+                self.logger.info(f"使用传递的topics: {topics}")
             print(f"broker_host: --------------------------------- {broker_host}")
             self.start_mqtt_client(connection_id, broker_host, broker_port, topics, **kwargs)
         else:
@@ -191,34 +228,69 @@ class SocketServerManager(ProducerConsumerManager):
             self.logger.info(f"停止生产者: {production_id}")
 
 
+    def _store_data(self, data: DataPoint, reason: str):
+        """存储数据到数据库（真正的同步版本）"""
+        db_provider = self.consumer_tool_pool.get_consumer_tool("sleep_data_storage_db_save")
+        if db_provider is None:
+            self.logger.error("无法获取连接")
+            return
+        
+        try:
+            db_dict = data.to_db_dict()
+            # 使用真正的同步方法
+            result = db_provider.add_record_sync(data=db_dict)
+            self.logger.info(f"存储成功 ID:{result}")
+            return result
+        except Exception as e:
+            self.logger.error(f"存储失败: {e}")
+            return None
+        finally:
+            self.consumer_tool_pool.release_consumer_tool("sleep_data_storage_db_save", db_provider)
+
+
     def _process_stored_device_data(self):
         """处理存储在设备队列中的数据"""
         try:
-            # 获取所有设备ID
-            devices = self.get_all_devices()
-            for device_id in devices:
-                device_data_list = self.get_all_device_data(device_id)
-                time.sleep(5)
-                self.logger.info(f"{device_id}: ------------------ \n {len(device_data_list)}")
-                # self.logger.info(f"{device_id}: ------------------ \n {device_data_list}")
-                
-                """
-                批次实时数据处理管道
-                batch_result = pipline(batch_device_data)
-                批次插入实时数据
-                """
-                
-                """
-                插入实时数据测试
-                self.real_time_data_state.put([{"device_id": device_data_list[-1][-1], "data": device_data_list[-1]}])
-                self.logger.info(f"real_time_data_state: --------------- {self.real_time_data_state.get_all_devices_data()}")
-                device_data = self.real_time_data_state.get(device_id="13271C9D10004071111715B507")
-                self.logger.info(f"13271C9D10004071111715B507 data: --------------- {device_data}")
-                device_UNKNOWN_data = self.real_time_data_state.get(device_id="UNKNOWN")
-                self.logger.info(f"UNKNOWN data: --------------- {device_UNKNOWN_data}")
-                """
+            # ========== 从统一的工具池获取存储工具 ==========
+            # ========== 使用上下文管理器自动管理工具生命周期 ==========
+            with self.consumer_tool_pool.get_tool("sleep_data_storage") as storage_tool:
+                # 获取所有设备ID
+                devices = self.get_all_devices()
+                for device_id in devices:
+                    device_data_list = self.get_all_device_data(device_id)
+                    if not device_data_list:
+                        continue
+                    
+                    # 使用工具执行存储判断
+                    should_store, reason, latest_data = storage_tool.process_uart_data_window(
+                        device_sn=device_id,
+                        uart_data_list=device_data_list
+                    )
+                    self.logger.info(f"should_store: {should_store}, {reason}")
+                    if should_store:
+                        self._store_data(data=latest_data, reason=reason)
+                    
+                    # time.sleep(5)
+                    # self.logger.info(f"{device_id}: ------------------ \n {len(device_data_list)}")
+                    # self.logger.info(f"{device_id}: ------------------ \n {device_data_list}")
+                    
+                    """
+                    批次实时数据处理管道
+                    batch_result = pipline(batch_device_data)
+                    批次插入实时数据
+                    """
+                    
+                    """
+                    插入实时数据测试
+                    self.real_time_data_state.put([{"device_id": device_data_list[-1][-1], "data": device_data_list[-1]}])
+                    self.logger.info(f"real_time_data_state: --------------- {self.real_time_data_state.get_all_devices_data()}")
+                    device_data = self.real_time_data_state.get(device_id="13271C9D10004071111715B507")
+                    self.logger.info(f"13271C9D10004071111715B507 data: --------------- {device_data}")
+                    device_UNKNOWN_data = self.real_time_data_state.get(device_id="UNKNOWN")
+                    self.logger.info(f"UNKNOWN data: --------------- {device_UNKNOWN_data}")
+                    """
         except Exception as e:
-            self.logger.error(f"处理存储设备数据时出错: {e}")
+            self.logger.error(f"处理存储设备数据时出错: {str(e)}")
 
 
     def batch_pipline(self):
@@ -229,6 +301,7 @@ class SocketServerManager(ProducerConsumerManager):
         """实现消费者工作逻辑"""
         while self.consumer_worker_running and self._is_running:
             self._process_stored_device_data()
+            time.sleep(1)
 
 
     def shutdown(self):
@@ -263,6 +336,470 @@ class SocketServerManager(ProducerConsumerManager):
         self.logger.info("关闭完成")
 
 
+    def update_subscription_status(self, topic: str, subscription_status: SubscriptionStatus) -> bool:
+        try:
+            result = utils.request_url(
+                url=update_subscription_status_url,
+                param_dict={"topic": topic, "subscription_status": subscription_status},
+            )
+            return True
+        except Exception as e:
+            raise ValueError("Fail to update subscription status ! {str(e)}") from e
+        return False
+
+
+    def add_topic(self, topic: str, connection_id: str = "mqtt_client_1") -> Dict[str, Any]:
+        """
+        添加单个topic到指定的MQTT客户端
+        
+        Args:
+            topic: 要添加的topic
+            connection_id: MQTT客户端连接ID
+            
+        Returns:
+            Dict: 操作结果
+        """
+        if connection_id not in self.mqtt_clients:
+            return {
+                'success': False,
+                'error': f'MQTT客户端 {connection_id} 不存在',
+                'result': False
+            }
+        
+        mqtt_client = self.mqtt_clients[connection_id]
+        
+        # 调用MQTT客户端的单个添加方法
+        try:
+            result = mqtt_client.add_topic(topic)
+        except Exception as e:
+            try:
+                self.update_subscription_status(topic=topic, subscription_status="failed")
+            except Exception as e:
+                self.logger.info(str(e))
+                raise ValueError(str(e)) from e
+            raise ValueError("Fail to add topic! {str(e)}") from e
+        
+        # 更新manager的device_topics列表
+        if result and topic not in self.device_topics:
+            self.device_topics.append(topic)
+        
+        self.logger.info(f"添加topic到客户端 {connection_id}: {topic} -> {result}")
+        try:
+            self.update_subscription_status(topic=topic, subscription_status="subscribed")
+        except Exception as e:
+            self.logger.info(str(e))
+            raise ValueError(str(e)) from e
+        return {
+            'success': True,
+            'connection_id': connection_id,
+            'topic': topic,
+            'result': result,
+            'current_device_topics': self.device_topics.copy(),
+            'mqtt_client_topics': mqtt_client.get_subscribed_topics()
+        }
+
+
+    def remove_topic(self, topic: str, connection_id: str = "mqtt_client_1") -> Dict[str, Any]:
+        """
+        从指定的MQTT客户端移除单个topic
+        
+        Args:
+            topic: 要移除的topic
+            connection_id: MQTT客户端连接ID
+            
+        Returns:
+            Dict: 操作结果
+        """
+        if connection_id not in self.mqtt_clients:
+            return {
+                'success': False,
+                'error': f'MQTT客户端 {connection_id} 不存在',
+                'result': False
+            }
+        
+        mqtt_client = self.mqtt_clients[connection_id]
+        
+        # 调用MQTT客户端的单个移除方法
+        result = mqtt_client.remove_topic(topic)
+        
+        # 更新manager的device_topics列表
+        if result and topic in self.device_topics:
+            self.device_topics.remove(topic)
+        
+        self.logger.info(f"移除topic从客户端 {connection_id}: {topic} -> {result}")
+        self.update_subscription_status(topic=topic, subscription_status="unsubscribed")
+        return {
+            'success': True,
+            'connection_id': connection_id,
+            'topic': topic,
+            'result': result,
+            'current_device_topics': self.device_topics.copy(),
+            'mqtt_client_topics': mqtt_client.get_subscribed_topics()
+        }
+
+
+    def add_topics_batch(self, new_topics: List[str], connection_id: str = "mqtt_client_1") -> Dict[str, Any]:
+        """
+        批量添加topics到指定的MQTT客户端
+        
+        Args:
+            new_topics: 要添加的topic列表
+            connection_id: MQTT客户端连接ID
+            
+        Returns:
+            Dict: 操作结果
+        """
+        if connection_id not in self.mqtt_clients:
+            return {
+                'success': False,
+                'error': f'MQTT客户端 {connection_id} 不存在',
+                'results': {topic: False for topic in new_topics}
+            }
+        
+        results = {}
+        for topic in new_topics:
+            single_result = self.add_topic(topic, connection_id)
+            results[topic] = single_result['result'] if single_result['success'] else False
+        
+        self.logger.info(f"批量添加topics到客户端 {connection_id}: {results}")
+        
+        mqtt_client = self.mqtt_clients[connection_id]
+        return {
+            'success': True,
+            'connection_id': connection_id,
+            'results': results,
+            'current_device_topics': self.device_topics.copy(),
+            'mqtt_client_topics': mqtt_client.get_subscribed_topics()
+        }
+
+
+    def remove_topics_batch(self, topics_to_remove: List[str], connection_id: str = "mqtt_client_1") -> Dict[str, Any]:
+        """
+        批量从指定的MQTT客户端移除topics
+        
+        Args:
+            topics_to_remove: 要移除的topic列表
+            connection_id: MQTT客户端连接ID
+            
+        Returns:
+            Dict: 操作结果
+        """
+        if connection_id not in self.mqtt_clients:
+            return {
+                'success': False,
+                'error': f'MQTT客户端 {connection_id} 不存在',
+                'results': {topic: False for topic in topics_to_remove}
+            }
+        
+        results = {}
+        for topic in topics_to_remove:
+            single_result = self.remove_topic(topic, connection_id)
+            results[topic] = single_result['result'] if single_result['success'] else False
+        
+        self.logger.info(f"批量移除topics从客户端 {connection_id}: {results}")
+        
+        mqtt_client = self.mqtt_clients[connection_id]
+        return {
+            'success': True,
+            'connection_id': connection_id,
+            'results': results,
+            'current_device_topics': self.device_topics.copy(),
+            'mqtt_client_topics': mqtt_client.get_subscribed_topics()
+        }
+
+
+    def get_current_topics(self, connection_id: str = "mqtt_client_1") -> Dict[str, Any]:
+        """
+        获取指定MQTT客户端当前订阅的topics
+        
+        Args:
+            connection_id: MQTT客户端连接ID
+            
+        Returns:
+            Dict: 当前topics信息
+        """
+        if connection_id not in self.mqtt_clients:
+            return {
+                'success': False,
+                'error': f'MQTT客户端 {connection_id} 不存在',
+                'topics': []
+            }
+        
+        mqtt_client = self.mqtt_clients[connection_id]
+        current_topics = mqtt_client.get_subscribed_topics()
+        
+        return {
+            'success': True,
+            'connection_id': connection_id,
+            'topics': current_topics,
+            'is_connected': mqtt_client.is_connected(),
+            'topics_count': len(current_topics),
+            'manager_device_topics': self.device_topics.copy()
+        }
+
+
+    def sync_topics_with_api(self, connection_id: str = "mqtt_client_1") -> Dict[str, Any]:
+        """
+        从API同步最新的topics到指定的MQTT客户端
+        
+        Args:
+            connection_id: MQTT客户端连接ID
+            
+        Returns:
+            Dict: 同步结果
+        """
+        if connection_id not in self.mqtt_clients:
+            return {
+                'success': False,
+                'error': f'MQTT客户端 {connection_id} 不存在'
+            }
+        
+        try:
+            # 重新从API加载topics
+            self.load_topics_from_api()
+            
+            mqtt_client = self.mqtt_clients[connection_id]
+            
+            # 使用MQTT客户端的sync_topics方法同步到API的topics
+            sync_result = mqtt_client.sync_topics(self.device_topics)
+            
+            self.logger.info(f"从API同步topics到客户端 {connection_id}: {sync_result}")
+            
+            return {
+                'success': True,
+                'connection_id': connection_id,
+                'api_topics': self.device_topics.copy(),
+                'sync_result': sync_result,
+                'api_topics_count': len(self.device_topics),
+                'final_client_topics': mqtt_client.get_subscribed_topics()
+            }
+            
+        except Exception as e:
+            error_msg = f"从API同步topics失败: {e}"
+            self.logger.error(error_msg)
+            return {
+                'success': False,
+                'error': error_msg,
+                'connection_id': connection_id
+            }
+
+
+    def get_all_mqtt_clients_topics(self) -> Dict[str, Any]:
+        """
+        获取所有MQTT客户端的topics信息
+        
+        Returns:
+            Dict: 所有客户端的topics信息
+        """
+        all_clients_info = {}
+        
+        for connection_id, mqtt_client in self.mqtt_clients.items():
+            all_clients_info[connection_id] = {
+                'topics': mqtt_client.get_subscribed_topics(),
+                'is_connected': mqtt_client.is_connected(),
+                'topics_count': len(mqtt_client.get_subscribed_topics())
+            }
+        
+        return {
+            'success': True,
+            'clients_count': len(self.mqtt_clients),
+            'clients_info': all_clients_info,
+            'manager_device_topics': self.device_topics.copy(),
+            'manager_topics_count': len(self.device_topics)
+        }
+
+
+
+
+def create_api_app(manager_instance):
+    """创建API应用"""
+    from fastapi import FastAPI
+    from fastapi.responses import JSONResponse
+    from pydantic import BaseModel
+    from typing import Optional, List
+    from datetime import datetime
+    
+    app = FastAPI(title="Topic Management API", version="1.0.0")
+    
+    # 请求模型
+    class TopicRequest(BaseModel):
+        topic: str
+        connection_id: Optional[str] = "mqtt_client_1"
+
+    class TopicsRequest(BaseModel):
+        topics: List[str]
+        connection_id: Optional[str] = "mqtt_client_1"
+
+    class ConnectionRequest(BaseModel):
+        connection_id: Optional[str] = "mqtt_client_1"
+    
+    # 复制你的所有API接口到这里...
+    @app.post("/add_topic")
+    async def add_topic(request: TopicRequest):
+        try:
+            result = manager_instance.add_topic(request.topic, request.connection_id)
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "添加topic成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"添加topic失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.post("/remove_topic")
+    async def remove_topic(request: TopicRequest):
+        """删除单个topic"""
+        try:
+            result = manager_instance.remove_topic(request.topic, request.connection_id)
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "删除topic成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"删除topic失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.post("/add_topics_batch")
+    async def add_topics_batch(request: TopicsRequest):
+        """批量添加topics"""
+        try:
+            result = manager_instance.add_topics_batch(request.topics, request.connection_id)
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "批量添加topics成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"批量添加topics失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.post("/remove_topics_batch")
+    async def remove_topics_batch(request: TopicsRequest):
+        """批量删除topics"""
+        try:
+            result = manager_instance.remove_topics_batch(request.topics, request.connection_id)
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "批量删除topics成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"批量删除topics失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.get("/get_current_topics")
+    async def get_current_topics(connection_id: Optional[str] = "mqtt_client_1"):
+        """获取当前订阅的topics，该方法有歧义"""
+        try:
+            connection_id = "mqtt_client_1" if connection_id is None else connection_id
+            result = manager_instance.get_current_topics(connection_id)
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "获取当前topics成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"获取当前topics失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.post("/get_current_topics")
+    async def get_current_topics(request: ConnectionRequest):
+        """获取当前订阅的topics，该方法有歧义"""
+        try:
+            result = manager_instance.get_current_topics(request.connection_id)
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "获取当前topics成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"获取当前topics失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.post("/sync_topics_with_api")
+    async def sync_topics_with_api(request: ConnectionRequest):
+        """从API同步topics"""
+        try:
+            result = manager_instance.sync_topics_with_api(request.connection_id)
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "API同步topics成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"API同步失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.get("/get_all_mqtt_clients_topics")
+    async def get_all_mqtt_clients_topics():
+        """获取所有MQTT客户端的topics信息"""
+        try:
+            result = manager_instance.get_all_mqtt_clients_topics()
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "获取所有客户端信息成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"获取所有客户端信息失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    @app.post("/get_all_mqtt_clients_topics")
+    async def get_all_mqtt_clients_topics():
+        """获取所有MQTT客户端的topics信息"""
+        try:
+            result = manager_instance.get_all_mqtt_clients_topics()
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "获取所有客户端信息成功", "data": result, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"获取所有客户端信息失败: {e}", "timestamp": datetime.now().isoformat()}
+            )
+
+
+    # 健康检查接口
+    @app.get("/health")
+    async def health():
+        """健康检查"""
+        try:
+            health_data = {"status": "ok", "service": "topic_management_api"}
+            return JSONResponse(
+                status_code=200,
+                content={"success": True, "message": "服务健康检查成功", "data": health_data, "timestamp": datetime.now().isoformat()}
+            )
+        except Exception as e:
+            error_info = f"健康检查失败: {e}"
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": error_info, "timestamp": datetime.now().isoformat()}
+            )
+    
+    return app
+
+
+
+
 def demo_usage(port: int):
     """演示不同配置的使用方式"""
     
@@ -275,6 +812,9 @@ def demo_usage(port: int):
     from pathlib import Path
     import signal
     import threading
+    from src.sleep_data_storage import SleepDataStorage
+    from api.table.base.real_time_vital_data import RealTimeVitalData
+    from agent.provider.sql_provider import SqlProvider
 
     # 创建停止事件
     stop_event = threading.Event()
@@ -305,8 +845,20 @@ def demo_usage(port: int):
                 conf=conf_value[topic_name]
             )
     print(f"model_paths: --------------------------------------\n {model_paths}")
-    consumer_tool_pool = ConsumerToolPool(model_paths=model_paths)
-    
+    consumer_tool_pool = ConsumerToolPool(model_paths={}, total_pool_size=0)
+
+
+    consumer_tool_pool.add_tool(
+        tool_name="sleep_data_storage",
+        tool_factory=lambda: SleepDataStorage(max_normal_interval=60.0),
+        pool_size=3
+    )
+
+    consumer_tool_pool.add_tool(
+        tool_name="sleep_data_storage_db_save",
+        tool_factory=lambda: SqlProvider(model=RealTimeVitalData, sql_config_path=SQL_CONFIG_PATH),
+        pool_size=3
+    )
     
     # 配置1: 生产队列使用内存，设备存储使用内存
     print("\n📦 配置1: 全内存存储")
@@ -328,13 +880,22 @@ def demo_usage(port: int):
     # 启动MQTT客户端
     manager1.start_produce_worker(
         "mqtt", 
-        "mqtt_client_1", 
+        "mqtt_client_1",
         broker_host=mqtt_config.host,
         broker_port=mqtt_config.port,
-        topics=["/topic/sx_sleep_heart_rate_lg_02_odata", "/topic/sx_sleep_heart_rate_lg_00_odata"],
+        # topics=["/topic/sx_sleep_heart_rate_lg_02_odata", "/topic/sx_sleep_heart_rate_lg_00_odata"],
         username=mqtt_config.username,
         password=mqtt_config.password
     )
+    
+    api_app = create_api_app(manager1)
+    
+    def start_api_server():
+        import uvicorn
+        uvicorn.run(api_app, host="0.0.0.0", port=9040)
+    api_thread = threading.Thread(target=start_api_server, daemon=True)
+    api_thread.start()
+    print("🔥 API服务已启动在端口9040")
     
     
     # 查看设备数据
