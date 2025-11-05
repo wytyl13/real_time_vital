@@ -15,6 +15,8 @@ from typing import (
 )
 from enum import Enum
 import asyncio
+from fastapi.middleware.cors import CORSMiddleware
+import logging
 
 from tools.utils import Utils
 
@@ -33,6 +35,8 @@ REDIS_CONFIG_PATH = str(ROOT_DIRECTORY / "config" / "yaml" / "redis_config.yaml"
 SQL_CONFIG_PATH = str(ROOT_DIRECTORY / "config" / "yaml" / "sql_config.yaml")
 
 
+SSL_CERTFILE = str(ROOT_DIRECTORY / "cert" / "shunxikj.com.crt")
+SSL_KEYFILE = str(ROOT_DIRECTORY / "cert" / "shunxikj.com.key")
 
 from base.producer_consumer import ProducerConsumerManager
 from src.socket_server import SocketServer
@@ -41,6 +45,8 @@ from src.mqtt_client import MQTTClient
 
 from agent.base.base_tool import tool
 from src.sleep_data_storage import DataPoint
+from src.sleep_detector_manager import SleepDetectorManager
+
 
 class SubscriptionStatus(str, Enum):
     """订阅状态枚举"""
@@ -85,6 +91,18 @@ class SocketServerManager(ProducerConsumerManager):
         )
         self.device_topics = []
         self.load_topics_from_api()
+        
+        self.sleep_detector_manager = SleepDetectorManager(
+            # sleep_end_timeout=600,  # 10分钟
+            # min_sleep_duration=1800  # 30分钟
+        )
+        
+        # 注册睡眠事件回调
+        self.sleep_detector_manager.register_callback(
+            'sleep_report_start_end_time', 
+            self.sleep_report_start_end_time
+        )
+        
         
     def load_topics_from_api(self):
         try:
@@ -152,9 +170,36 @@ class SocketServerManager(ProducerConsumerManager):
             'in_bed': parse_data[10] if isinstance(parse_data, tuple) and len(parse_data) > 10 else 0
         }
         self.redis_device_storage.publish_websocket_data(device_id=device_id, websocket_data=websocket_data)
+        
+        
+        device_id = parse_data[-1]
+        in_bed = parse_data[10]  # 在床状态（1=在床，0=不在床）
+        timestamp = parse_data[0]
+        self.sleep_detector_manager.check_sleep_status(device_id, in_bed, timestamp)
+        
         # devices = self.get_all_devices()
         # self.logger.info(f"devices: {devices}, \n ")
         # self.logger.info(f"devices_data: {self.get_all_device_data(devices[0])}, \n ")
+
+
+    def sleep_report_start_end_time(self, event_type: str, data: Any):
+        sleep_end_time = data["sleep_end_time"]
+        sleep_start_time = data["sleep_start_time"]
+        '''保存睡眠记录到数据库'''
+        self.logger.info("完成睡眠区间检测！=======================================")
+        self.logger.info(f"event_type: {event_type}")
+        self.logger.info(f"sleep_start_time: {sleep_start_time}")
+        self.logger.info(f"sleep_end_time: {sleep_end_time}")
+        self.logger.info("完成睡眠区间检测！=======================================")
+        # if event_type == 'sleep_end' and data['is_valid']:
+        #     sleep_record = data['sleep_record']
+            # 调用数据库保存逻辑
+            # self.save_to_database(sleep_record.to_dict())
+            
+    
+    def get_sleep_status(self):
+        '''获取所有设备睡眠状态'''
+        return self.sleep_detector_manager.get_all_status()
 
 
     def start_socket_server(self, port: int):
@@ -239,7 +284,7 @@ class SocketServerManager(ProducerConsumerManager):
             db_dict = data.to_db_dict()
             # 使用真正的同步方法
             result = db_provider.add_record_sync(data=db_dict)
-            self.logger.info(f"存储成功 ID:{result}")
+            self.logger.info(f"存储成功 ID:{result} {reason}")
             return result
         except Exception as e:
             self.logger.error(f"存储失败: {e}")
@@ -250,6 +295,8 @@ class SocketServerManager(ProducerConsumerManager):
 
     def _process_stored_device_data(self):
         """处理存储在设备队列中的数据"""
+        
+        
         try:
             # ========== 从统一的工具池获取存储工具 ==========
             # ========== 使用上下文管理器自动管理工具生命周期 ==========
@@ -266,7 +313,7 @@ class SocketServerManager(ProducerConsumerManager):
                         device_sn=device_id,
                         uart_data_list=device_data_list
                     )
-                    self.logger.info(f"should_store: {should_store}, {reason}")
+                    # self.logger.info(f"device_sn: {device_id}, should_store: {should_store}, {reason}")
                     if should_store:
                         self._store_data(data=latest_data, reason=reason)
                     
@@ -290,7 +337,8 @@ class SocketServerManager(ProducerConsumerManager):
                     self.logger.info(f"UNKNOWN data: --------------- {device_UNKNOWN_data}")
                     """
         except Exception as e:
-            self.logger.error(f"处理存储设备数据时出错: {str(e)}")
+            import traceback
+            self.logger.error(f"处理存储设备数据时出错: {str(e)}\n{traceback.format_exc()}")
 
 
     def batch_pipline(self):
@@ -307,10 +355,11 @@ class SocketServerManager(ProducerConsumerManager):
     def shutdown(self):
         """关闭管理器"""
         self.logger.info("关闭SocketServerManager...")
-        
+
         self._is_running = False
         self.consumer_worker_running = False
         
+        self.sleep_detector_manager.shutdown()
         # 停止所有生产者
         for production_id in list(self.active_production_lines.keys()):
             self.stop_produce_worker(production_id)
@@ -613,14 +662,33 @@ class SocketServerManager(ProducerConsumerManager):
 
 def create_api_app(manager_instance):
     """创建API应用"""
-    from fastapi import FastAPI
+    from fastapi import FastAPI, APIRouter
     from fastapi.responses import JSONResponse
     from pydantic import BaseModel
     from typing import Optional, List
     from datetime import datetime
     
     app = FastAPI(title="Topic Management API", version="1.0.0")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_credentials=True,
+        allow_headers=["*"],
+    )
     
+    # 设置日志
+    logger = logging.getLogger(__name__)
+    
+    # 添加请求日志中间件
+    @app.middleware("http")
+    async def log_requests(request, call_next):
+        logger.info(f"[收到请求] {request.method} {request.url}")
+        response = await call_next(request)
+        logger.info(f"[响应状态] {response.status_code}")
+        return response
+    
+    router = APIRouter(prefix="/api/topic")
     # 请求模型
     class TopicRequest(BaseModel):
         topic: str
@@ -634,7 +702,7 @@ def create_api_app(manager_instance):
         connection_id: Optional[str] = "mqtt_client_1"
     
     # 复制你的所有API接口到这里...
-    @app.post("/add_topic")
+    @router.post("/add_topic")
     async def add_topic(request: TopicRequest):
         try:
             result = manager_instance.add_topic(request.topic, request.connection_id)
@@ -649,7 +717,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.post("/remove_topic")
+    @router.post("/remove_topic")
     async def remove_topic(request: TopicRequest):
         """删除单个topic"""
         try:
@@ -665,7 +733,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.post("/add_topics_batch")
+    @router.post("/add_topics_batch")
     async def add_topics_batch(request: TopicsRequest):
         """批量添加topics"""
         try:
@@ -681,7 +749,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.post("/remove_topics_batch")
+    @router.post("/remove_topics_batch")
     async def remove_topics_batch(request: TopicsRequest):
         """批量删除topics"""
         try:
@@ -697,7 +765,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.get("/get_current_topics")
+    @router.get("/get_current_topics")
     async def get_current_topics(connection_id: Optional[str] = "mqtt_client_1"):
         """获取当前订阅的topics，该方法有歧义"""
         try:
@@ -714,7 +782,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.post("/get_current_topics")
+    @router.post("/get_current_topics")
     async def get_current_topics(request: ConnectionRequest):
         """获取当前订阅的topics，该方法有歧义"""
         try:
@@ -730,7 +798,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.post("/sync_topics_with_api")
+    @router.post("/sync_topics_with_api")
     async def sync_topics_with_api(request: ConnectionRequest):
         """从API同步topics"""
         try:
@@ -746,7 +814,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.get("/get_all_mqtt_clients_topics")
+    @router.get("/get_all_mqtt_clients_topics")
     async def get_all_mqtt_clients_topics():
         """获取所有MQTT客户端的topics信息"""
         try:
@@ -762,7 +830,7 @@ def create_api_app(manager_instance):
             )
 
 
-    @app.post("/get_all_mqtt_clients_topics")
+    @router.post("/get_all_mqtt_clients_topics")
     async def get_all_mqtt_clients_topics():
         """获取所有MQTT客户端的topics信息"""
         try:
@@ -779,7 +847,7 @@ def create_api_app(manager_instance):
 
 
     # 健康检查接口
-    @app.get("/health")
+    @router.get("/health")
     async def health():
         """健康检查"""
         try:
@@ -794,7 +862,7 @@ def create_api_app(manager_instance):
                 status_code=500,
                 content={"success": False, "message": error_info, "timestamp": datetime.now().isoformat()}
             )
-    
+    app.include_router(router)
     return app
 
 
@@ -847,10 +915,10 @@ def demo_usage(port: int):
     print(f"model_paths: --------------------------------------\n {model_paths}")
     consumer_tool_pool = ConsumerToolPool(model_paths={}, total_pool_size=0)
 
-
+    redis_config = SqlConfig.from_file(Path("/work/ai/real_time_vital_analyze/config/yaml/redis_config.yaml"))
     consumer_tool_pool.add_tool(
         tool_name="sleep_data_storage",
-        tool_factory=lambda: SleepDataStorage(max_normal_interval=60.0),
+        tool_factory=lambda: SleepDataStorage(max_normal_interval=60.0, redis_config=redis_config, websocket_alert_enabled=True),
         pool_size=3
     )
 
@@ -892,10 +960,24 @@ def demo_usage(port: int):
     
     def start_api_server():
         import uvicorn
-        uvicorn.run(api_app, host="0.0.0.0", port=9040)
+        run_kwargs = {
+            "app": api_app,
+            "host": "0.0.0.0", 
+            "port": 9040,
+            "log_level": "info",
+            "reload": False,
+        }
+        # 如果提供了SSL证书，则添加SSL配置
+        if SSL_CERTFILE and SSL_KEYFILE:
+            run_kwargs.update({
+                "ssl_certfile": SSL_CERTFILE,
+                "ssl_keyfile": SSL_KEYFILE
+            })
+        uvicorn.run(**run_kwargs)
+
     api_thread = threading.Thread(target=start_api_server, daemon=True)
     api_thread.start()
-    print("🔥 API服务已启动在端口9040")
+    print("🔥 API服务已启动在端口9040 (HTTPS)")
     
     
     # 查看设备数据

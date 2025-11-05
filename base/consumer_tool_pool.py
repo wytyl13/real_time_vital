@@ -296,9 +296,9 @@ class ConsumerToolPool(BaseTool):
         regular_usage = 0 if regular_total == 0 else (1 - regular_available / regular_total) * 100
         total_usage = 0 if all_total == 0 else (1 - total_available / all_total) * 100
         
-        self.logger.info("当前线程池状态 ===========================")
-        self.logger.info(f"默认主题池: 可用 {default_available}/{default_total} 实例, 使用率 {default_usage:.1f}%")
-        self.logger.info(f"个性化主题池: 可用 {regular_available}/{regular_total} 实例, 使用率 {regular_usage:.1f}%")
-        self.logger.info(f"总体: 可用 {total_available}/{all_total} 实例, 使用率 {total_usage:.1f}%")
-        self.logger.info(f"详细状态: {pool_status}")
-        self.logger.info("================================================")
+        # self.logger.info("当前线程池状态 ===========================")
+        # self.logger.info(f"默认主题池: 可用 {default_available}/{default_total} 实例, 使用率 {default_usage:.1f}%")
+        # self.logger.info(f"个性化主题池: 可用 {regular_available}/{regular_total} 实例, 使用率 {regular_usage:.1f}%")
+        # self.logger.info(f"总体: 可用 {total_available}/{all_total} 实例, 使用率 {total_usage:.1f}%")
+        # self.logger.info(f"详细状态: {pool_status}")
+        # self.logger.info("================================================")

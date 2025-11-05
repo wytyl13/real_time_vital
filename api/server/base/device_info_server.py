@@ -58,6 +58,7 @@ class DeviceInfoServer:
         app.post("/api/device_info/save")(self.save_device_info)
         app.post("/api/device_info/update")(self.update_device_info)
         app.post("/api/device_info/delete")(self.delete_device_info)
+        app.post("/api/device_info/save_and_subscribed")(self.save_and_subscribed)
 
 
     async def get_device_info(
@@ -482,6 +483,88 @@ class DeviceInfoServer:
             if sql_provider:
                 await sql_provider.close()
                 await asyncio.sleep(0.1)
+
+
+    async def save_and_subscribed(
+        self,
+        list_device_info: ListDeviceInfo,
+    ):
+        """
+        POST请求 - 首次配网：保存设备信息并订阅topic
+        """
+        self.logger.info(f"收到首次配网请求: {list_device_info}")
+        
+        # 只验证topic
+        if not list_device_info.topic:
+            return JSONResponse(
+                status_code=400,
+                content={"success": False, "message": "首次配网失败：请提供订阅主题topic", "timestamp": datetime.now().isoformat()}
+            )
+        
+        try:
+            # 第一步：保存设备信息
+            save_result = await self.save_device_info(list_device_info)
+            message = ""
+            if save_result.status_code != 200:
+                message = "首次配网部分成功：设备信息已存在"
+                # return save_result
+            else:
+                message = "首次配网部分成功：设备信息已保存"
+                
+            self.logger.info(f"✅ 设备信息保存成功")
+            
+            # 第二步：订阅设备topic
+            self.logger.info(f"步骤2：订阅设备topic - topic: {list_device_info.topic}")
+            
+            subscription_url = "https://ai.shunxikj.com:9040/api/topic/add_topic"
+            request_data = {"topic": list_device_info.topic}
+            
+            subscription_result = utils.request_url(subscription_url, request_data, "POST")
+            
+            if subscription_result:
+                message = message + "，topic订阅成功"
+                # 订阅成功
+                return JSONResponse(
+                    status_code=200,
+                    content={
+                        "success": True,
+                        "message": message,
+                        "data": {
+                            "device_sn": list_device_info.device_sn,
+                            "topic": list_device_info.topic,
+                            "device_save": "成功",
+                            "topic_subscription": "成功"
+                        },
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
+            else:
+                message = message + "，但topic订阅失败"
+                # 订阅失败，但设备已保存
+                return JSONResponse(
+                    status_code=207,
+                    content={
+                        "success": False,
+                        "message": message,
+                        "data": {
+                            "device_save": "成功",
+                            "topic_subscription": f"失败 - {subscription_result}"
+                        },
+                        "timestamp": datetime.now().isoformat()
+                    }
+                )
+                
+        except Exception as e:
+            import traceback
+            self.logger.error(f"首次配网失败: {str(e)}\n{traceback.format_exc()}")
+            return JSONResponse(
+                status_code=500,
+                content={
+                    "success": False,
+                    "message": f"首次配网失败: {str(e)}",
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
 
 
 if __name__ == '__main__':

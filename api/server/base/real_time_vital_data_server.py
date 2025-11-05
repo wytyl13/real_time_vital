@@ -79,50 +79,25 @@ class RealTimeVitalDataServer:
             if device_sn is not None:
                 condition["device_sn"] = device_sn
 
-            # 处理时间范围查询
-            time_range_condition = []
-            if start_timestamp is not None:
-                time_range_condition.append(f"timestamp >= {start_timestamp}")
-            if end_timestamp is not None:
-                time_range_condition.append(f"timestamp <= {end_timestamp}")
-
-            self.logger.info(f"查询条件: {condition}, 时间范围: {time_range_condition}")
+            # 构建时间范围条件
+            if start_timestamp is not None or end_timestamp is not None:
+                timestamp_range = {}
+                if start_timestamp is not None:
+                    timestamp_range["min"] = start_timestamp
+                if end_timestamp is not None:
+                    timestamp_range["max"] = end_timestamp
+                condition["timestamp"] = timestamp_range
 
             sql_provider = SqlProvider(model=RealTimeVitalData, sql_config_path=self.sql_config_path)
             
-            # 构建查询
-            if time_range_condition:
-                # 如果有时间范围条件，使用原始SQL查询
-                where_clauses = []
-                for key, value in condition.items():
-                    where_clauses.append(f"{key} = '{value}'")
-                where_clauses.extend(time_range_condition)
-                where_sql = " AND ".join(where_clauses) if where_clauses else "1=1"
-                
-                query = f"""
-                SELECT id, device_sn, timestamp, breath_bpm, breath_curve, 
-                       heart_bpm, heart_curve, state, create_time
-                FROM real_time_vital_data
-                WHERE {where_sql}
-                ORDER BY timestamp DESC
-                """
-                result = await sql_provider.execute_query(query)
-            else:
-                # 普通条件查询
-                result = await sql_provider.get_record_by_condition(
-                    condition=condition,
-                    fields=[
-                        "id",
-                        "device_sn",
-                        "timestamp",
-                        "breath_bpm",
-                        "breath_curve",
-                        "heart_bpm",
-                        "heart_curve",
-                        "state",
-                        "create_time"
-                    ],
-                )
+            # 直接使用 get_record_by_condition，它已经支持范围查询
+            result = await sql_provider.get_record_by_condition(
+                condition=condition,
+                fields=[
+                    "id", "device_sn", "timestamp", "breath_bpm", "breath_curve",
+                    "heart_bpm", "heart_curve", "state", "create_time"
+                ],
+            )
 
             json_compatible_result = jsonable_encoder(result)
             

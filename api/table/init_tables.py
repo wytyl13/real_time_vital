@@ -15,7 +15,7 @@ from api.table.base.user_data import UserData
 from api.table.base.device_info import DeviceInfo
 from api.table.base.health_report import HealthReport
 from api.table.base.real_time_vital_data import RealTimeVitalData
-
+from api.table.base.message_center import MessageCenter
 
 # from api.table.base.community_real_time_data import CommunityRealTimeData
 # from api.table.meal_assistance_subsystem.menu_data import MenuData
@@ -149,7 +149,8 @@ async def create_default_users():
                     "role": "admin",
                     "community": "舜熙科技智慧养老社区",
                     "status": "active",
-                    "creator": "system"
+                    "creator": "system",
+                    "phone": "12255889656"
                 },
                 {
                     "user_name": "shunxikeji",
@@ -160,7 +161,7 @@ async def create_default_users():
                     "height": 170,
                     "weight": 60,
                     "address": "北京市海淀区圆明园西路2号院",
-                    "phone": "17600174284",
+                    "phone": "19135900555",
                     "email": "wytyl1314520@gmail.com",
                     "role": "user",
                     "community": "舜熙科技智慧养老社区",
@@ -174,7 +175,8 @@ async def create_default_users():
                     "role": "device_manager",
                     "community": "舜熙科技智慧养老社区",
                     "status": "active",
-                    "creator": "system"
+                    "creator": "system",
+                    "phone": "17600174284"
                 }
             ]
             
@@ -283,7 +285,7 @@ async def create_default_devices():
             # 定义默认设备列表
             default_devices = [
                 {
-                    "device_sn": "UART__TOPIC_SX_SLEEP_HEART_RATE_LG_02_ODATA",
+                    "device_sn": "sx_sleep_heart_rate_lg_02_odata",
                     "device_name": "样板间靠门床垫",
                     "device_type": "智能床垫",
                     "user_name": "shunxikeji",
@@ -293,7 +295,7 @@ async def create_default_devices():
                     "topic": "/topic/sx_sleep_heart_rate_lg_02_odata",
                 },
                 {
-                    "device_sn": "UART__TOPIC_SX_SLEEP_HEART_RATE_LG_00_ODATA",
+                    "device_sn": "sx_sleep_heart_rate_lg_00_odata",
                     "device_type": "智能床垫",
                     "device_name": "大厅测试",
                     "wifi_name": "sxkj",

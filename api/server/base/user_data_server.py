@@ -16,14 +16,18 @@ from pydantic import BaseModel
 from typing import (
     Optional
 )
+from pathlib import Path
 from fastapi.encoders import jsonable_encoder
 import asyncio
 import json
+import random
+import string
+
 
 from api.table.base.user_data import UserData
 from agent.provider.sql_provider import SqlProvider
 from tools.utils import Utils
-
+from api.server.base.sms_verication_api import SMSVerificationServer, SMSVerifyRequest
 
 utils = Utils()
 
@@ -56,7 +60,17 @@ class UserDataServer:
     def __init__(self, sql_config_path: str):
         self.sql_config_path = sql_config_path
         self.logger = logging.getLogger(self.__class__.__name__)
-
+        ROOT_DIRECTORY = Path(__file__).parent.parent.parent.parent
+        ENV_PATH = str(ROOT_DIRECTORY / ".env")
+        REDIS_CONFIG_PATH = str(ROOT_DIRECTORY / "config" / "yaml" / "redis_config.yaml")
+        
+        # 初始化SMS验证服务
+        self.sms_server = SMSVerificationServer(
+            env_path=ENV_PATH, 
+            redis_config_path=REDIS_CONFIG_PATH
+        )
+        
+        
 
     def register_routes(self, app: FastAPI):
         """注册用户相关的路由"""
@@ -66,11 +80,43 @@ class UserDataServer:
         app.post("/api/user_data/update")(self.update_user_data)
         app.post("/api/user_data/delete")(self.delete_user_data)
         app.post("/api/user_data/login")(self.login_user)  # 新增登录接口
+        app.post("/api/user_data/verication_and_save_user")(self.verication_and_save_user)  # 新增登录接口
+
+
+    async def verify_user_sms_code(self, phone: str, code: str, scene: str = "register") -> dict:
+        try:
+            # 创建验证请求
+            verify_request = SMSVerifyRequest(
+                phone=phone,
+                code=code,
+                scene=scene
+            )
+            
+            # 执行验证
+            response = await self.sms_server.verify_code(verify_request)
+            
+            # 判断验证结果
+            # 由于verify_code返回的是JSONResponse，我们需要检查状态码
+            if hasattr(response, 'status_code'):
+                return response.status_code == 200
+            
+            return False
+        
+        except Exception as e:
+            print(f"SMS验证异常: {str(e)}")
+            return False
+        
+        finally:
+            # 确保关闭连接
+            if self.sms_server:
+                await self.sms_server.close()
+
 
     async def get_user_data(
         self,
         user_name: Optional[str] = None,
         id: Optional[int] = None,
+        phone: Optional[str] = None
     ):
         """
         GET请求 - 支持获取所有用户（不传递任何参数）信息，支持获取指定用户（在url中传递user_name参数）信息
@@ -85,6 +131,9 @@ class UserDataServer:
         
         if id is not None and user_name is None:
             condition["id"] = id
+
+        if phone is not None:
+            condition["phone"] = phone
             
         try:
             sql_provider = SqlProvider(model=UserData, sql_config_path=self.sql_config_path)
@@ -124,6 +173,7 @@ class UserDataServer:
         try:
             user_name = list_user_data.user_name
             id = list_user_data.id
+            phone = list_user_data.phone
         except Exception as e:
             return JSONResponse(
                 status_code=400,
@@ -131,7 +181,7 @@ class UserDataServer:
             )
         # 无效代码-----------------------------------------------------------------------------------------
         try:
-            result = await self.get_user_data(user_name=user_name, id=id)
+            result = await self.get_user_data(user_name=user_name, id=id, phone=phone)
             return result
         except Exception as e:
             return JSONResponse(
@@ -152,23 +202,75 @@ class UserDataServer:
             self.logger.info(f"收到用户数据保存请求: {list_user_data}")
             
             if not list_user_data.user_name:
+                if not list_user_data.phone:
+                    return JSONResponse(
+                        status_code=400,
+                        content={"success": False, "message": f"请提供用户名或手机号", "timestamp": datetime.now().isoformat()}
+                    )
+                    
+                    
+            phone_user_data = ListUserData(
+                phone=list_user_data.phone,
+            )
+            phone_response = await self.post_user_data(phone_user_data)
+            phone_response = utils.parse_server_return(phone_response)
+            if phone_response:
                 return JSONResponse(
-                    status_code=400,
-                    content={"success": False, "message": f"请提供用户名", "timestamp": datetime.now().isoformat()}
+                    status_code=500,
+                    content={"success": False, "message": f"用户{list_user_data.phone}已经存在！", "timestamp": datetime.now().isoformat()}
                 )
             
-            if not list_user_data.password:
-                return JSONResponse(
-                    status_code=400,
-                    content={"success": False, "message": f"请提供密码", "timestamp": datetime.now().isoformat()}
+            
+            def generate_random_username(length=8):
+                letters = string.ascii_lowercase + string.digits
+                return ''.join(random.choice(letters) for _ in range(length))
+            
+            
+            # 根据手机号生成不重复的纯字符串用户名
+            base_username = generate_random_username(8)
+            generated_username = base_username
+            counter = 1
+            
+            while True:
+                temp_user_data = ListUserData(
+                    user_name=generated_username,
                 )
             
-            # if not list_user_data.full_name:
+                response = await self.post_user_data(temp_user_data)
+                response = utils.parse_server_return(response)
+                
+                if not response:  # 用户名不存在，可以使用
+                    break
+                    
+                
+                # 用户名已存在，重新生成
+                else:
+                    generated_username = generate_random_username(8)
+                    counter += 1
+                
+                if counter > 100:  # 防止无限循环
+                    return JSONResponse(
+                        status_code=400,
+                        content={"success": False, "message": f"创建用户失败：{list_user_data.phone}", "timestamp": datetime.now().isoformat()}
+                    )
+            
+            list_user_data.user_name = generated_username
+            self.logger.info(f"为手机号 {list_user_data.phone} 生成用户名: {generated_username}")
+            
+            
+            # if not list_user_data.user_name:
             #     return JSONResponse(
             #         status_code=400,
-            #         content={"success": False, "message": f"请提供姓名", "timestamp": datetime.now().isoformat()}
+            #         content={"success": False, "message": f"请提供用户名", "timestamp": datetime.now().isoformat()}
             #     )
-                
+            
+            # if not list_user_data.password:
+            #     return JSONResponse(
+            #         status_code=400,
+            #         content={"success": False, "message": f"请提供密码", "timestamp": datetime.now().isoformat()}
+            #     )
+            
+            
             if list_user_data.id:
                 return JSONResponse(
                     status_code=400,
@@ -257,6 +359,42 @@ class UserDataServer:
             if sql_provider:
                 await sql_provider.close()
                 await asyncio.sleep(0.1)
+
+
+    async def verication_and_save_user(
+        self, 
+        sms_verify_request: SMSVerifyRequest
+    ):
+        try:
+            verify_response = await self.verify_user_sms_code(
+                phone=sms_verify_request.phone,
+                code=sms_verify_request.code
+            )
+            
+            if not verify_response:
+                return JSONResponse(
+                    status_code=500,
+                    content={"success": False, "message": f"验证码错误", "timestamp": datetime.now().isoformat()}
+                ) 
+            
+            check_exists_response = await self.post_user_data(ListUserData(phone=sms_verify_request.phone))
+            check_exists_response_result = utils.parse_server_return(check_exists_response)
+            if check_exists_response_result:
+                return JSONResponse(
+                    status_code=500,
+                    content={"success": True, "message": f"登录用户已存在！", "timestamp": datetime.now().isoformat()}
+                )
+                
+            save_repsonse = await self.save_user_data(ListUserData(phone=sms_verify_request.phone))
+            
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"success": False, "message": f"fail to exec verication and save user function {str(e)}", "timestamp": datetime.now().isoformat()}
+            )
+        return save_repsonse
+        
+        
 
 
     async def update_user_data(

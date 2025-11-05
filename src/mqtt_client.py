@@ -67,7 +67,7 @@ class MQTTClient:
         self.websocket_path = websocket_path
         
         self.last_log_time = 0
-        self.log_interval = 10  # 10秒间隔 ← 在这里修改
+        self.log_interval = 60  # 10秒间隔 ← 在这里修改
         self.message_count = 0  # 消息计数器
         
         # 状态管理
@@ -325,10 +325,10 @@ class MQTTClient:
             # }
             
             # 根据状态判断在床情况
-            in_bed = 1 if status_value == 0 else 0  # 0表示在床
+            in_bed = 1 if (status_value != 1 and status_value != 4) else 0 # 0表示在床
             
             # 设备ID基于主题生成
-            device_id = f"UART_{topic.replace('/', '_')}"
+            device_id = topic.split('/')[-1]
             
             # 记录详细信息
             # self.logger.info(f"UART数据解析 - 序列号: {sequence_number}, "
@@ -350,7 +350,7 @@ class MQTTClient:
                 0.0,                    # 体动能量 (body_move_energy) - UART格式中没有此数据
                 0.0,                    # 体动范围 (body_move_range) - UART格式中没有此数据
                 in_bed,                 # 在床状态
-                device_id.upper()       # 设备ID
+                device_id      # 设备ID
             )
             
         except Exception as e:

@@ -1,0 +1,155 @@
+{
+  "sleep_phases": [
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "04:46",
+      "end_time_str": "04:46",
+      "duration_str": "0.0小时0.0分1.0秒"
+    },
+    {
+      "phase_type": "rem_sleep",
+      "start_time_str": "04:46",
+      "end_time_str": "04:46",
+      "duration_str": "0.0小时0.0分33.0秒"
+    },
+    {
+      "phase_type": "awake",
+      "start_time_str": "04:46",
+      "end_time_str": "04:49",
+      "duration_str": "0.0小时2.0分41.0秒"
+    },
+    {
+      "phase_type": "rem_sleep",
+      "start_time_str": "04:49",
+      "end_time_str": "04:54",
+      "duration_str": "0.0小时4.0分22.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "04:54",
+      "end_time_str": "04:54",
+      "duration_str": "0.0小时0.0分1.0秒"
+    },
+    {
+      "phase_type": "rem_sleep",
+      "start_time_str": "04:54",
+      "end_time_str": "04:54",
+      "duration_str": "0.0小时0.0分49.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "04:54",
+      "end_time_str": "04:54",
+      "duration_str": "0.0小时0.0分2.0秒"
+    },
+    {
+      "phase_type": "rem_sleep",
+      "start_time_str": "04:54",
+      "end_time_str": "04:57",
+      "duration_str": "0.0小时2.0分20.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "04:57",
+      "end_time_str": "04:58",
+      "duration_str": "0.0小时0.0分46.0秒"
+    },
+    {
+      "phase_type": "rem_sleep",
+      "start_time_str": "04:58",
+      "end_time_str": "04:59",
+      "duration_str": "0.0小时1.0分12.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "04:59",
+      "end_time_str": "05:02",
+      "duration_str": "0.0小时3.0分4.0秒"
+    },
+    {
+      "phase_type": "rem_sleep",
+      "start_time_str": "05:02",
+      "end_time_str": "05:02",
+      "duration_str": "0.0小时0.0分21.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "05:02",
+      "end_time_str": "05:09",
+      "duration_str": "0.0小时6.0分25.0秒"
+    },
+    {
+      "phase_type": "rem_sleep",
+      "start_time_str": "05:09",
+      "end_time_str": "05:09",
+      "duration_str": "0.0小时0.0分10.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "05:09",
+      "end_time_str": "05:32",
+      "duration_str": "0.0小时23.0分40.0秒"
+    },
+    {
+      "phase_type": "light_sleep",
+      "start_time_str": "05:32",
+      "end_time_str": "05:34",
+      "duration_str": "0.0小时1.0分18.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "05:34",
+      "end_time_str": "05:34",
+      "duration_str": "0.0小时0.0分2.0秒"
+    },
+    {
+      "phase_type": "light_sleep",
+      "start_time_str": "05:34",
+      "end_time_str": "05:34",
+      "duration_str": "0.0小时0.0分11.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "05:34",
+      "end_time_str": "05:44",
+      "duration_str": "0.0小时10.0分14.0秒"
+    },
+    {
+      "phase_type": "light_sleep",
+      "start_time_str": "05:44",
+      "end_time_str": "05:44",
+      "duration_str": "0.0小时0.0分4.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "05:44",
+      "end_time_str": "05:58",
+      "duration_str": "0.0小时13.0分34.0秒"
+    },
+    {
+      "phase_type": "light_sleep",
+      "start_time_str": "05:58",
+      "end_time_str": "05:58",
+      "duration_str": "0.0小时0.0分11.0秒"
+    },
+    {
+      "phase_type": "deep_sleep",
+      "start_time_str": "05:58",
+      "end_time_str": "05:58",
+      "duration_str": "0.0小时0.0分6.0秒"
+    },
+    {
+      "phase_type": "light_sleep",
+      "start_time_str": "05:58",
+      "end_time_str": "05:58",
+      "duration_str": "0.0小时0.0分2.0秒"
+    }
+  ],
+  "sleep_summary": {
+    "deep_sleep_ratio": 0.8027258027258027,
+    "light_sleep_ratio": 0.024486024486024487,
+    "avg_heart_rate": 61,
+    "avg_breath_rate": 13.0,
+    "total_score": 62.17069194661886
+  }
+}

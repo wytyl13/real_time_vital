@@ -1,0 +1,3270 @@
+{
+  "sleep_report": {
+    "bed_time": "2025-10-29T04:46:25",
+    "leave_bed_time": "2025-10-29T05:58:34",
+    "total_duration": "1.0小时12.0分9.0秒",
+    "deep_sleep_duration": "0.0小时57.0分55.0秒",
+    "light_sleep_duration": "0.0小时1.0分46.0秒",
+    "awake_duration": "0.0小时2.0分41.0秒",
+    "avg_heart_rate": 61,
+    "avg_breath_rate": 13.0,
+    "sleep_score": 64.67069194661886,
+    "health_report": "### 睡眠质量评估\n本次睡眠质量评级为**良好**，总评分为64.7分。\n\n### 睡眠结构分析\n- **深睡眠时长**: 0.0小时57.0分55.0秒，占比80.3%\n- **浅睡眠时长**: 0.0小时1.0分46.0秒，占比2.4%\n- **清醒时长**: 0.0小时2.0分41.0秒\n\n### 生理指标分析\n- **平均心率**: 61次/分钟\n- **平均呼吸率**: 13.0次/分钟\n- **心率变异性**: 0.0138\n\n### 行为表现分析\n- **体动次数**: 47次\n- **呼吸异常次数**: 0次\n- **离床次数**: 0次\n\n### 综合建议\n根据本次睡眠数据分析，建议关注睡眠环境优化和作息规律调整。"
+  },
+  "gantt_data": {
+    "segments": [
+      {
+        "start_timestamp": 1761713185.0,
+        "end_timestamp": 1761713186.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713186.0,
+        "end_timestamp": 1761713187.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713187.0,
+        "end_timestamp": 1761713219.0,
+        "duration": 32.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713219.0,
+        "end_timestamp": 1761713221.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713221.0,
+        "end_timestamp": 1761713235.0,
+        "duration": 14.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713235.0,
+        "end_timestamp": 1761713236.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713236.0,
+        "end_timestamp": 1761713237.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713237.0,
+        "end_timestamp": 1761713238.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713238.0,
+        "end_timestamp": 1761713239.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713239.0,
+        "end_timestamp": 1761713240.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713240.0,
+        "end_timestamp": 1761713257.0,
+        "duration": 17.0,
+        "state": 13,
+        "state_name": "清醒",
+        "sleep_stage": "awake"
+      },
+      {
+        "start_timestamp": 1761713257.0,
+        "end_timestamp": 1761713258.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713258.0,
+        "end_timestamp": 1761713259.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713259.0,
+        "end_timestamp": 1761713260.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713260.0,
+        "end_timestamp": 1761713272.0,
+        "duration": 12.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713272.0,
+        "end_timestamp": 1761713273.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713273.0,
+        "end_timestamp": 1761713274.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713274.0,
+        "end_timestamp": 1761713275.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713275.0,
+        "end_timestamp": 1761713281.0,
+        "duration": 6.0,
+        "state": 13,
+        "state_name": "清醒",
+        "sleep_stage": "awake"
+      },
+      {
+        "start_timestamp": 1761713281.0,
+        "end_timestamp": 1761713282.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713282.0,
+        "end_timestamp": 1761713283.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713283.0,
+        "end_timestamp": 1761713297.0,
+        "duration": 14.0,
+        "state": 13,
+        "state_name": "清醒",
+        "sleep_stage": "awake"
+      },
+      {
+        "start_timestamp": 1761713297.0,
+        "end_timestamp": 1761713298.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713298.0,
+        "end_timestamp": 1761713300.0,
+        "duration": 2.0,
+        "state": 13,
+        "state_name": "清醒",
+        "sleep_stage": "awake"
+      },
+      {
+        "start_timestamp": 1761713300.0,
+        "end_timestamp": 1761713301.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713301.0,
+        "end_timestamp": 1761713323.0,
+        "duration": 22.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713323.0,
+        "end_timestamp": 1761713325.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713325.0,
+        "end_timestamp": 1761713327.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713327.0,
+        "end_timestamp": 1761713328.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713328.0,
+        "end_timestamp": 1761713329.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713329.0,
+        "end_timestamp": 1761713331.0,
+        "duration": 2.0,
+        "state": 13,
+        "state_name": "清醒",
+        "sleep_stage": "awake"
+      },
+      {
+        "start_timestamp": 1761713331.0,
+        "end_timestamp": 1761713332.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713332.0,
+        "end_timestamp": 1761713333.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713333.0,
+        "end_timestamp": 1761713357.0,
+        "duration": 24.0,
+        "state": 13,
+        "state_name": "清醒",
+        "sleep_stage": "awake"
+      },
+      {
+        "start_timestamp": 1761713357.0,
+        "end_timestamp": 1761713363.0,
+        "duration": 6.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713363.0,
+        "end_timestamp": 1761713364.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713364.0,
+        "end_timestamp": 1761713377.0,
+        "duration": 13.0,
+        "state": 13,
+        "state_name": "清醒",
+        "sleep_stage": "awake"
+      },
+      {
+        "start_timestamp": 1761713377.0,
+        "end_timestamp": 1761713380.0,
+        "duration": 3.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713380.0,
+        "end_timestamp": 1761713404.0,
+        "duration": 24.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713404.0,
+        "end_timestamp": 1761713406.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713406.0,
+        "end_timestamp": 1761713424.0,
+        "duration": 18.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713424.0,
+        "end_timestamp": 1761713425.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713425.0,
+        "end_timestamp": 1761713426.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713426.0,
+        "end_timestamp": 1761713427.0,
+        "duration": 1.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713427.0,
+        "end_timestamp": 1761713429.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713429.0,
+        "end_timestamp": 1761713430.0,
+        "duration": 1.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713430.0,
+        "end_timestamp": 1761713432.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713432.0,
+        "end_timestamp": 1761713433.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713433.0,
+        "end_timestamp": 1761713436.0,
+        "duration": 3.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713436.0,
+        "end_timestamp": 1761713437.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713437.0,
+        "end_timestamp": 1761713438.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713438.0,
+        "end_timestamp": 1761713447.0,
+        "duration": 9.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713447.0,
+        "end_timestamp": 1761713448.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713448.0,
+        "end_timestamp": 1761713461.0,
+        "duration": 13.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713461.0,
+        "end_timestamp": 1761713462.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713462.0,
+        "end_timestamp": 1761713463.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713463.0,
+        "end_timestamp": 1761713471.0,
+        "duration": 8.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713471.0,
+        "end_timestamp": 1761713472.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713472.0,
+        "end_timestamp": 1761713473.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713473.0,
+        "end_timestamp": 1761713477.0,
+        "duration": 4.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713477.0,
+        "end_timestamp": 1761713478.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713478.0,
+        "end_timestamp": 1761713480.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713480.0,
+        "end_timestamp": 1761713481.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713481.0,
+        "end_timestamp": 1761713482.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713482.0,
+        "end_timestamp": 1761713483.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713483.0,
+        "end_timestamp": 1761713484.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713484.0,
+        "end_timestamp": 1761713488.0,
+        "duration": 4.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713488.0,
+        "end_timestamp": 1761713490.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713490.0,
+        "end_timestamp": 1761713491.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713491.0,
+        "end_timestamp": 1761713492.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713492.0,
+        "end_timestamp": 1761713493.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713493.0,
+        "end_timestamp": 1761713494.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713494.0,
+        "end_timestamp": 1761713514.0,
+        "duration": 20.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713514.0,
+        "end_timestamp": 1761713532.0,
+        "duration": 18.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713532.0,
+        "end_timestamp": 1761713533.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713533.0,
+        "end_timestamp": 1761713535.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713535.0,
+        "end_timestamp": 1761713547.0,
+        "duration": 12.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713547.0,
+        "end_timestamp": 1761713549.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713549.0,
+        "end_timestamp": 1761713550.0,
+        "duration": 1.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713550.0,
+        "end_timestamp": 1761713562.0,
+        "duration": 12.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713562.0,
+        "end_timestamp": 1761713563.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713563.0,
+        "end_timestamp": 1761713564.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713564.0,
+        "end_timestamp": 1761713567.0,
+        "duration": 3.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713567.0,
+        "end_timestamp": 1761713568.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713568.0,
+        "end_timestamp": 1761713569.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713569.0,
+        "end_timestamp": 1761713570.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713570.0,
+        "end_timestamp": 1761713571.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713571.0,
+        "end_timestamp": 1761713616.0,
+        "duration": 45.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713616.0,
+        "end_timestamp": 1761713617.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713617.0,
+        "end_timestamp": 1761713618.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713618.0,
+        "end_timestamp": 1761713629.0,
+        "duration": 11.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713629.0,
+        "end_timestamp": 1761713630.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713630.0,
+        "end_timestamp": 1761713631.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713631.0,
+        "end_timestamp": 1761713642.0,
+        "duration": 11.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713642.0,
+        "end_timestamp": 1761713643.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713643.0,
+        "end_timestamp": 1761713650.0,
+        "duration": 7.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713650.0,
+        "end_timestamp": 1761713651.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713651.0,
+        "end_timestamp": 1761713652.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713652.0,
+        "end_timestamp": 1761713654.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713654.0,
+        "end_timestamp": 1761713667.0,
+        "duration": 13.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713667.0,
+        "end_timestamp": 1761713669.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713669.0,
+        "end_timestamp": 1761713670.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713670.0,
+        "end_timestamp": 1761713671.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713671.0,
+        "end_timestamp": 1761713692.0,
+        "duration": 21.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713692.0,
+        "end_timestamp": 1761713694.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713694.0,
+        "end_timestamp": 1761713731.0,
+        "duration": 37.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713731.0,
+        "end_timestamp": 1761713739.0,
+        "duration": 8.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713739.0,
+        "end_timestamp": 1761713741.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713741.0,
+        "end_timestamp": 1761713742.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713742.0,
+        "end_timestamp": 1761713772.0,
+        "duration": 30.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713772.0,
+        "end_timestamp": 1761713774.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713774.0,
+        "end_timestamp": 1761713775.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713775.0,
+        "end_timestamp": 1761713776.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713776.0,
+        "end_timestamp": 1761713834.0,
+        "duration": 58.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713834.0,
+        "end_timestamp": 1761713835.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761713835.0,
+        "end_timestamp": 1761713836.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761713836.0,
+        "end_timestamp": 1761713880.0,
+        "duration": 44.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761713880.0,
+        "end_timestamp": 1761713887.0,
+        "duration": 7.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713887.0,
+        "end_timestamp": 1761713889.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713889.0,
+        "end_timestamp": 1761713890.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713890.0,
+        "end_timestamp": 1761713893.0,
+        "duration": 3.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713893.0,
+        "end_timestamp": 1761713895.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713895.0,
+        "end_timestamp": 1761713896.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713896.0,
+        "end_timestamp": 1761713897.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713897.0,
+        "end_timestamp": 1761713898.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713898.0,
+        "end_timestamp": 1761713899.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713899.0,
+        "end_timestamp": 1761713912.0,
+        "duration": 13.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713912.0,
+        "end_timestamp": 1761713913.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713913.0,
+        "end_timestamp": 1761713915.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713915.0,
+        "end_timestamp": 1761713916.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713916.0,
+        "end_timestamp": 1761713917.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713917.0,
+        "end_timestamp": 1761713918.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713918.0,
+        "end_timestamp": 1761713919.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713919.0,
+        "end_timestamp": 1761713920.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713920.0,
+        "end_timestamp": 1761713921.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713921.0,
+        "end_timestamp": 1761713922.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713922.0,
+        "end_timestamp": 1761713949.0,
+        "duration": 27.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761713949.0,
+        "end_timestamp": 1761713951.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713951.0,
+        "end_timestamp": 1761713952.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761713952.0,
+        "end_timestamp": 1761714010.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714010.0,
+        "end_timestamp": 1761714011.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714011.0,
+        "end_timestamp": 1761714012.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714012.0,
+        "end_timestamp": 1761714071.0,
+        "duration": 59.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714071.0,
+        "end_timestamp": 1761714072.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714072.0,
+        "end_timestamp": 1761714073.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714073.0,
+        "end_timestamp": 1761714131.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714131.0,
+        "end_timestamp": 1761714132.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714132.0,
+        "end_timestamp": 1761714133.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714133.0,
+        "end_timestamp": 1761714136.0,
+        "duration": 3.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714136.0,
+        "end_timestamp": 1761714138.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714138.0,
+        "end_timestamp": 1761714139.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714139.0,
+        "end_timestamp": 1761714140.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714140.0,
+        "end_timestamp": 1761714141.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714141.0,
+        "end_timestamp": 1761714142.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714142.0,
+        "end_timestamp": 1761714143.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714143.0,
+        "end_timestamp": 1761714144.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714144.0,
+        "end_timestamp": 1761714145.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714145.0,
+        "end_timestamp": 1761714146.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714146.0,
+        "end_timestamp": 1761714147.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714147.0,
+        "end_timestamp": 1761714150.0,
+        "duration": 3.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761714150.0,
+        "end_timestamp": 1761714152.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714152.0,
+        "end_timestamp": 1761714153.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714153.0,
+        "end_timestamp": 1761714154.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714154.0,
+        "end_timestamp": 1761714155.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714155.0,
+        "end_timestamp": 1761714156.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714156.0,
+        "end_timestamp": 1761714157.0,
+        "duration": 1.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761714157.0,
+        "end_timestamp": 1761714159.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714159.0,
+        "end_timestamp": 1761714217.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714217.0,
+        "end_timestamp": 1761714219.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714219.0,
+        "end_timestamp": 1761714220.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714220.0,
+        "end_timestamp": 1761714278.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714278.0,
+        "end_timestamp": 1761714279.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714279.0,
+        "end_timestamp": 1761714280.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714280.0,
+        "end_timestamp": 1761714338.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714338.0,
+        "end_timestamp": 1761714339.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714339.0,
+        "end_timestamp": 1761714340.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714340.0,
+        "end_timestamp": 1761714365.0,
+        "duration": 25.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714365.0,
+        "end_timestamp": 1761714366.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714366.0,
+        "end_timestamp": 1761714400.0,
+        "duration": 34.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714400.0,
+        "end_timestamp": 1761714425.0,
+        "duration": 25.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714425.0,
+        "end_timestamp": 1761714426.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714426.0,
+        "end_timestamp": 1761714460.0,
+        "duration": 34.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714460.0,
+        "end_timestamp": 1761714482.0,
+        "duration": 22.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714482.0,
+        "end_timestamp": 1761714483.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714483.0,
+        "end_timestamp": 1761714485.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714485.0,
+        "end_timestamp": 1761714498.0,
+        "duration": 13.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714498.0,
+        "end_timestamp": 1761714500.0,
+        "duration": 2.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714500.0,
+        "end_timestamp": 1761714542.0,
+        "duration": 42.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714542.0,
+        "end_timestamp": 1761714543.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714543.0,
+        "end_timestamp": 1761714544.0,
+        "duration": 1.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761714544.0,
+        "end_timestamp": 1761714552.0,
+        "duration": 8.0,
+        "state": 12,
+        "state_name": "REM睡眠",
+        "sleep_stage": "rem_sleep"
+      },
+      {
+        "start_timestamp": 1761714552.0,
+        "end_timestamp": 1761714554.0,
+        "duration": 2.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714554.0,
+        "end_timestamp": 1761714587.0,
+        "duration": 33.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714587.0,
+        "end_timestamp": 1761714589.0,
+        "duration": 2.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714589.0,
+        "end_timestamp": 1761714612.0,
+        "duration": 23.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714612.0,
+        "end_timestamp": 1761714647.0,
+        "duration": 35.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714647.0,
+        "end_timestamp": 1761714649.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714649.0,
+        "end_timestamp": 1761714672.0,
+        "duration": 23.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714672.0,
+        "end_timestamp": 1761714704.0,
+        "duration": 32.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714704.0,
+        "end_timestamp": 1761714705.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714705.0,
+        "end_timestamp": 1761714709.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714709.0,
+        "end_timestamp": 1761714759.0,
+        "duration": 50.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714759.0,
+        "end_timestamp": 1761714765.0,
+        "duration": 6.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714765.0,
+        "end_timestamp": 1761714770.0,
+        "duration": 5.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714770.0,
+        "end_timestamp": 1761714817.0,
+        "duration": 47.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714817.0,
+        "end_timestamp": 1761714818.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714818.0,
+        "end_timestamp": 1761714825.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714825.0,
+        "end_timestamp": 1761714851.0,
+        "duration": 26.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714851.0,
+        "end_timestamp": 1761714852.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714852.0,
+        "end_timestamp": 1761714877.0,
+        "duration": 25.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714877.0,
+        "end_timestamp": 1761714911.0,
+        "duration": 34.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714911.0,
+        "end_timestamp": 1761714912.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714912.0,
+        "end_timestamp": 1761714937.0,
+        "duration": 25.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714937.0,
+        "end_timestamp": 1761714971.0,
+        "duration": 34.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714971.0,
+        "end_timestamp": 1761714972.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714972.0,
+        "end_timestamp": 1761714974.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714974.0,
+        "end_timestamp": 1761714975.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761714975.0,
+        "end_timestamp": 1761714997.0,
+        "duration": 22.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761714997.0,
+        "end_timestamp": 1761715021.0,
+        "duration": 24.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715021.0,
+        "end_timestamp": 1761715035.0,
+        "duration": 14.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715035.0,
+        "end_timestamp": 1761715054.0,
+        "duration": 19.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715054.0,
+        "end_timestamp": 1761715055.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715055.0,
+        "end_timestamp": 1761715095.0,
+        "duration": 40.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715095.0,
+        "end_timestamp": 1761715109.0,
+        "duration": 14.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715109.0,
+        "end_timestamp": 1761715111.0,
+        "duration": 2.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715111.0,
+        "end_timestamp": 1761715116.0,
+        "duration": 5.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715116.0,
+        "end_timestamp": 1761715117.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715117.0,
+        "end_timestamp": 1761715169.0,
+        "duration": 52.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715169.0,
+        "end_timestamp": 1761715176.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715176.0,
+        "end_timestamp": 1761715177.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715177.0,
+        "end_timestamp": 1761715229.0,
+        "duration": 52.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715229.0,
+        "end_timestamp": 1761715236.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715236.0,
+        "end_timestamp": 1761715237.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715237.0,
+        "end_timestamp": 1761715290.0,
+        "duration": 53.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715290.0,
+        "end_timestamp": 1761715297.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715297.0,
+        "end_timestamp": 1761715298.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715298.0,
+        "end_timestamp": 1761715350.0,
+        "duration": 52.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715350.0,
+        "end_timestamp": 1761715357.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715357.0,
+        "end_timestamp": 1761715358.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715358.0,
+        "end_timestamp": 1761715377.0,
+        "duration": 19.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715377.0,
+        "end_timestamp": 1761715378.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715378.0,
+        "end_timestamp": 1761715418.0,
+        "duration": 40.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715418.0,
+        "end_timestamp": 1761715438.0,
+        "duration": 20.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715438.0,
+        "end_timestamp": 1761715439.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715439.0,
+        "end_timestamp": 1761715479.0,
+        "duration": 40.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715479.0,
+        "end_timestamp": 1761715480.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715480.0,
+        "end_timestamp": 1761715499.0,
+        "duration": 19.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715499.0,
+        "end_timestamp": 1761715539.0,
+        "duration": 40.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715539.0,
+        "end_timestamp": 1761715541.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715541.0,
+        "end_timestamp": 1761715560.0,
+        "duration": 19.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715560.0,
+        "end_timestamp": 1761715600.0,
+        "duration": 40.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715600.0,
+        "end_timestamp": 1761715601.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715601.0,
+        "end_timestamp": 1761715620.0,
+        "duration": 19.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715620.0,
+        "end_timestamp": 1761715660.0,
+        "duration": 40.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715660.0,
+        "end_timestamp": 1761715661.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715661.0,
+        "end_timestamp": 1761715680.0,
+        "duration": 19.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715680.0,
+        "end_timestamp": 1761715694.0,
+        "duration": 14.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715694.0,
+        "end_timestamp": 1761715695.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715695.0,
+        "end_timestamp": 1761715720.0,
+        "duration": 25.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715720.0,
+        "end_timestamp": 1761715754.0,
+        "duration": 34.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715754.0,
+        "end_timestamp": 1761715755.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715755.0,
+        "end_timestamp": 1761715780.0,
+        "duration": 25.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715780.0,
+        "end_timestamp": 1761715814.0,
+        "duration": 34.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715814.0,
+        "end_timestamp": 1761715815.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715815.0,
+        "end_timestamp": 1761715817.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715817.0,
+        "end_timestamp": 1761715819.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715819.0,
+        "end_timestamp": 1761715842.0,
+        "duration": 23.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715842.0,
+        "end_timestamp": 1761715851.0,
+        "duration": 9.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715851.0,
+        "end_timestamp": 1761715853.0,
+        "duration": 2.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715853.0,
+        "end_timestamp": 1761715865.0,
+        "duration": 12.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715865.0,
+        "end_timestamp": 1761715866.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715866.0,
+        "end_timestamp": 1761715879.0,
+        "duration": 13.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715879.0,
+        "end_timestamp": 1761715926.0,
+        "duration": 47.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715926.0,
+        "end_timestamp": 1761715927.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715927.0,
+        "end_timestamp": 1761715940.0,
+        "duration": 13.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715940.0,
+        "end_timestamp": 1761715970.0,
+        "duration": 30.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761715970.0,
+        "end_timestamp": 1761715972.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715972.0,
+        "end_timestamp": 1761715973.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715973.0,
+        "end_timestamp": 1761715974.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715974.0,
+        "end_timestamp": 1761715975.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715975.0,
+        "end_timestamp": 1761715976.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715976.0,
+        "end_timestamp": 1761715977.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715977.0,
+        "end_timestamp": 1761715978.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715978.0,
+        "end_timestamp": 1761715979.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715979.0,
+        "end_timestamp": 1761715980.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715980.0,
+        "end_timestamp": 1761715981.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715981.0,
+        "end_timestamp": 1761715982.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761715982.0,
+        "end_timestamp": 1761716040.0,
+        "duration": 58.0,
+        "state": 11,
+        "state_name": "浅睡眠",
+        "sleep_stage": "light_sleep"
+      },
+      {
+        "start_timestamp": 1761716040.0,
+        "end_timestamp": 1761716041.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716041.0,
+        "end_timestamp": 1761716042.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716042.0,
+        "end_timestamp": 1761716043.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716043.0,
+        "end_timestamp": 1761716044.0,
+        "duration": 1.0,
+        "state": 11,
+        "state_name": "浅睡眠",
+        "sleep_stage": "light_sleep"
+      },
+      {
+        "start_timestamp": 1761716044.0,
+        "end_timestamp": 1761716046.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716046.0,
+        "end_timestamp": 1761716048.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716048.0,
+        "end_timestamp": 1761716049.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716049.0,
+        "end_timestamp": 1761716050.0,
+        "duration": 1.0,
+        "state": 11,
+        "state_name": "浅睡眠",
+        "sleep_stage": "light_sleep"
+      },
+      {
+        "start_timestamp": 1761716050.0,
+        "end_timestamp": 1761716052.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716052.0,
+        "end_timestamp": 1761716054.0,
+        "duration": 2.0,
+        "state": 11,
+        "state_name": "浅睡眠",
+        "sleep_stage": "light_sleep"
+      },
+      {
+        "start_timestamp": 1761716054.0,
+        "end_timestamp": 1761716057.0,
+        "duration": 3.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716057.0,
+        "end_timestamp": 1761716058.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716058.0,
+        "end_timestamp": 1761716059.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716059.0,
+        "end_timestamp": 1761716061.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716061.0,
+        "end_timestamp": 1761716062.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716062.0,
+        "end_timestamp": 1761716063.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716063.0,
+        "end_timestamp": 1761716121.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716121.0,
+        "end_timestamp": 1761716122.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716122.0,
+        "end_timestamp": 1761716123.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716123.0,
+        "end_timestamp": 1761716182.0,
+        "duration": 59.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716182.0,
+        "end_timestamp": 1761716183.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716183.0,
+        "end_timestamp": 1761716184.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716184.0,
+        "end_timestamp": 1761716242.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716242.0,
+        "end_timestamp": 1761716243.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716243.0,
+        "end_timestamp": 1761716244.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716244.0,
+        "end_timestamp": 1761716302.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716302.0,
+        "end_timestamp": 1761716303.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716303.0,
+        "end_timestamp": 1761716304.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716304.0,
+        "end_timestamp": 1761716362.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716362.0,
+        "end_timestamp": 1761716363.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716363.0,
+        "end_timestamp": 1761716364.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716364.0,
+        "end_timestamp": 1761716423.0,
+        "duration": 59.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716423.0,
+        "end_timestamp": 1761716424.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716424.0,
+        "end_timestamp": 1761716425.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716425.0,
+        "end_timestamp": 1761716483.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716483.0,
+        "end_timestamp": 1761716484.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716484.0,
+        "end_timestamp": 1761716485.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716485.0,
+        "end_timestamp": 1761716543.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716543.0,
+        "end_timestamp": 1761716544.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716544.0,
+        "end_timestamp": 1761716545.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716545.0,
+        "end_timestamp": 1761716603.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716603.0,
+        "end_timestamp": 1761716604.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716604.0,
+        "end_timestamp": 1761716605.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716605.0,
+        "end_timestamp": 1761716663.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716663.0,
+        "end_timestamp": 1761716664.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716664.0,
+        "end_timestamp": 1761716665.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716665.0,
+        "end_timestamp": 1761716677.0,
+        "duration": 12.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716677.0,
+        "end_timestamp": 1761716679.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716679.0,
+        "end_timestamp": 1761716680.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716680.0,
+        "end_timestamp": 1761716681.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716681.0,
+        "end_timestamp": 1761716740.0,
+        "duration": 59.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716740.0,
+        "end_timestamp": 1761716741.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716741.0,
+        "end_timestamp": 1761716742.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716742.0,
+        "end_timestamp": 1761716800.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716800.0,
+        "end_timestamp": 1761716801.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716801.0,
+        "end_timestamp": 1761716802.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716802.0,
+        "end_timestamp": 1761716860.0,
+        "duration": 58.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716860.0,
+        "end_timestamp": 1761716861.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716861.0,
+        "end_timestamp": 1761716862.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716862.0,
+        "end_timestamp": 1761716870.0,
+        "duration": 8.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716870.0,
+        "end_timestamp": 1761716871.0,
+        "duration": 1.0,
+        "state": 5,
+        "state_name": "打鼾",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761716871.0,
+        "end_timestamp": 1761716923.0,
+        "duration": 52.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716923.0,
+        "end_timestamp": 1761716930.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716930.0,
+        "end_timestamp": 1761716931.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716931.0,
+        "end_timestamp": 1761716983.0,
+        "duration": 52.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716983.0,
+        "end_timestamp": 1761716990.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716990.0,
+        "end_timestamp": 1761716991.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761716991.0,
+        "end_timestamp": 1761717043.0,
+        "duration": 52.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717043.0,
+        "end_timestamp": 1761717050.0,
+        "duration": 7.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717050.0,
+        "end_timestamp": 1761717051.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717051.0,
+        "end_timestamp": 1761717104.0,
+        "duration": 53.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717104.0,
+        "end_timestamp": 1761717110.0,
+        "duration": 6.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717110.0,
+        "end_timestamp": 1761717112.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717112.0,
+        "end_timestamp": 1761717168.0,
+        "duration": 56.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717168.0,
+        "end_timestamp": 1761717172.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717172.0,
+        "end_timestamp": 1761717173.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717173.0,
+        "end_timestamp": 1761717228.0,
+        "duration": 55.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717228.0,
+        "end_timestamp": 1761717232.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717232.0,
+        "end_timestamp": 1761717233.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717233.0,
+        "end_timestamp": 1761717288.0,
+        "duration": 55.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717288.0,
+        "end_timestamp": 1761717292.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717292.0,
+        "end_timestamp": 1761717293.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717293.0,
+        "end_timestamp": 1761717348.0,
+        "duration": 55.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717348.0,
+        "end_timestamp": 1761717352.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717352.0,
+        "end_timestamp": 1761717353.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717353.0,
+        "end_timestamp": 1761717408.0,
+        "duration": 55.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717408.0,
+        "end_timestamp": 1761717412.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717412.0,
+        "end_timestamp": 1761717413.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717413.0,
+        "end_timestamp": 1761717469.0,
+        "duration": 56.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717469.0,
+        "end_timestamp": 1761717473.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717473.0,
+        "end_timestamp": 1761717474.0,
+        "duration": 1.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717474.0,
+        "end_timestamp": 1761717495.0,
+        "duration": 21.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717495.0,
+        "end_timestamp": 1761717497.0,
+        "duration": 2.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717497.0,
+        "end_timestamp": 1761717498.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717498.0,
+        "end_timestamp": 1761717499.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717499.0,
+        "end_timestamp": 1761717500.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717500.0,
+        "end_timestamp": 1761717501.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717501.0,
+        "end_timestamp": 1761717502.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717502.0,
+        "end_timestamp": 1761717503.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717503.0,
+        "end_timestamp": 1761717504.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717504.0,
+        "end_timestamp": 1761717505.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717505.0,
+        "end_timestamp": 1761717506.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717506.0,
+        "end_timestamp": 1761717508.0,
+        "duration": 2.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717508.0,
+        "end_timestamp": 1761717512.0,
+        "duration": 4.0,
+        "state": 10,
+        "state_name": "深睡眠",
+        "sleep_stage": "deep_sleep"
+      },
+      {
+        "start_timestamp": 1761717512.0,
+        "end_timestamp": 1761717513.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      },
+      {
+        "start_timestamp": 1761717513.0,
+        "end_timestamp": 1761717514.0,
+        "duration": 1.0,
+        "state": 2,
+        "state_name": "体动",
+        "sleep_stage": "movement"
+      }
+    ],
+    "device_sn": "UART__TOPIC_SX_SLEEP_HEART_RATE_LG_02_ODATA",
+    "total_segments": 394
+  },
+  "statistics": {
+    "basic_info": {
+      "start_timestamp": 1761713185.0,
+      "end_timestamp": 1761717514.0,
+      "total_duration": 4329.0
+    },
+    "phase_durations": {
+      "deep_sleep": 3475.0,
+      "rem_sleep": 587.0,
+      "awake": 161.0,
+      "light_sleep": 106.0
+    },
+    "overall_physiological": {
+      "avg_heart_rate": 61.139240506329116,
+      "avg_breath_rate": 13.049113924050634,
+      "heart_rate_variability": 0.013763331597918144
+    },
+    "phase_physiological": {
+      "deep_sleep": {
+        "avg_heart_rate": 61.0,
+        "avg_breath_rate": 10.6,
+        "heart_rate_range": [
+          61.0,
+          61.0
+        ],
+        "breath_rate_range": [
+          10.6,
+          10.6
+        ],
+        "data_points": 2
+      },
+      "rem_sleep": {
+        "avg_heart_rate": 60.0,
+        "avg_breath_rate": 16.033333333333335,
+        "heart_rate_range": [
+          60.0,
+          60.0
+        ],
+        "breath_rate_range": [
+          15.8,
+          16.2
+        ],
+        "data_points": 3
+      },
+      "awake": {
+        "avg_heart_rate": 64.0,
+        "avg_breath_rate": 18.5,
+        "heart_rate_range": [
+          64.0,
+          64.0
+        ],
+        "breath_rate_range": [
+          18.5,
+          18.5
+        ],
+        "data_points": 35
+      },
+      "light_sleep": {
+        "avg_heart_rate": 61.0,
+        "avg_breath_rate": 10.6,
+        "heart_rate_range": [
+          61.0,
+          61.0
+        ],
+        "breath_rate_range": [
+          10.6,
+          10.6
+        ],
+        "data_points": 2
+      }
+    },
+    "anomaly_statistics": {
+      "movement_episodes": 47,
+      "out_bed_episodes": 0,
+      "weak_breath_count": 0,
+      "snoring_episodes": 21,
+      "heart_rate_anomalies": 0,
+      "breath_rate_anomalies": 0,
+      "sleep_fragmentation": 112.26611226611227,
+      "phase_transitions": 135
+    },
+    "quality_metrics": {
+      "sleep_efficiency": 0.9628089628089628,
+      "deep_sleep_percentage": 0.8027258027258027,
+      "rem_percentage": 0.1355971355971356,
+      "awake_percentage": 0.03719103719103719,
+      "movement_index": 39.08523908523909
+    }
+  },
+  "data_quality": {
+    "total_points": 395,
+    "quality_score": 85,
+    "issues": [
+      "时间间隔不规律"
+    ],
+    "missing_ratio": 0.0,
+    "coverage_hours": 1.2025
+  }
+}

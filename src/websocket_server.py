@@ -28,6 +28,9 @@ from agent.base.tool import tool
 from agent.config.sql_config import SqlConfig
 
 redis_channel = 'websocket_realtime'
+REDIS_CHANNEL_ALERTS = 'websocket_alerts'
+
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s] [%(name)s] - %(message)s',
@@ -41,11 +44,12 @@ device_api_update_url = "https://ai.shunxikj.com:9039/api/device_info/update"
 class WebSocketClient:
     """WebSocket 客户端包装类"""
 
-    def __init__(self, websocket, client_id: str, ip: str, device_id: Optional[str] = None):
+    def __init__(self, websocket, client_id: str, ip: str, device_id: Optional[str] = None, subscription_type: str = "all"):
         self.websocket = websocket
         self.client_id = client_id
         self.ip = ip
         self.device_id = device_id
+        self.subscription_type = subscription_type
         self.connected_at = datetime.now()
         self.last_ping = datetime.now()
         self.user_agent = None
@@ -241,13 +245,15 @@ class WebSocketRedisBridge:
             
             # 创建订阅客户端
             self.pubsub = self.redis_client.pubsub()
-            await self.pubsub.subscribe(redis_channel)
-            self.logger.info(f"📢 成功订阅频道: {redis_channel}")
+            await self.pubsub.subscribe(redis_channel, REDIS_CHANNEL_ALERTS)
+            self.logger.info(f"📢 成功订阅频道: {redis_channel}，{REDIS_CHANNEL_ALERTS}")
+            
+            # 等待订阅确认
+            await asyncio.sleep(0.5)
             
         except Exception as e:
             self.logger.error(f"❌ Redis 连接失败: {e}")
             raise
-    
     
     
     async def handle_websocket_connection(self, websocket):
@@ -269,13 +275,23 @@ class WebSocketRedisBridge:
         # 解析查询参数（保持不变）
         device_id = None
         path = websocket.request.path
+        subscription_type = "all"  # 默认订阅所有
+        # 根据路径确定订阅类型
+        if path.startswith('/real_time_vital_data'):
+            subscription_type = "vital_data"
+        elif path.startswith('/real_time_alerts'):
+            subscription_type = "alerts"
+        elif path == '/':
+            subscription_type = "all"  # 根路径订阅所有
+        
+        
         if path and '?' in path:
             query_params = parse_qs(urlparse(path).query)
             if 'device_id' in query_params:
                 device_id = query_params['device_id'][0]
         
         # 创建客户端对象（保持不变）
-        client = WebSocketClient(websocket, client_id, client_ip, device_id)
+        client = WebSocketClient(websocket, client_id, client_ip, device_id, subscription_type)
         self.clients[client_id] = client
         
         device_info = f" [设备: {device_id}]" if device_id else ""
@@ -378,7 +394,72 @@ class WebSocketRedisBridge:
     async def handle_redis_message(self, channel: str, message: str):
         """处理 Redis 消息"""
         try:
+            # ✅ 添加原始消息日志
             data = json.loads(message)
+            
+            # 根据频道类型处理不同消息
+            if channel == REDIS_CHANNEL_ALERTS:
+                await self._handle_alert_message(data)
+            else:
+                await self._handle_realtime_message(channel, data)
+                
+        except json.JSONDecodeError as e:
+            self.logger.error(f"❌ Redis 消息 JSON 解析错误: {e}")
+        except Exception as e:
+            self.logger.error(f"❌ 处理 Redis 消息错误: {e}")
+    
+    
+    async def _handle_alert_message(self, data: Dict[str, Any]):
+        """处理预警消息"""
+        device_id = data.get('device_id', 'unknown')
+        alert_type = data.get('alert_type', 'unknown')
+        action = data.get('action', 'unknown')
+        
+        self.logger.info(f"🚨 预警消息: 设备={device_id}, 类型={alert_type}, 动作={action}")
+        
+        # 发送给客户端
+        sent_count = 0
+        clients_to_remove = []
+        
+        for client_id, client in self.clients.items():
+            if not client.is_alive():
+                clients_to_remove.append(client_id)
+                continue
+            
+            # 检查订阅类型
+            if client.subscription_type not in ["alerts", "all"]:
+                continue
+            
+            
+            # 检查设备过滤
+            if client.device_id and client.device_id != device_id:
+                continue
+            
+            # 发送预警数据
+            success = await client.send({
+                'type': 'alert',
+                'data': data,
+                'timestamp': datetime.now().isoformat()
+            })
+            
+            if success:
+                sent_count += 1
+            else:
+                clients_to_remove.append(client_id)
+        
+        # 清理断开的客户端
+        for client_id in clients_to_remove:
+            if client_id in self.clients:
+                del self.clients[client_id]
+        
+        if sent_count > 0:
+            self.logger.info(f"📤 预警已发送给 {sent_count} 个客户端")
+    
+    
+    async def _handle_realtime_message(self, channel: str, data: Dict[str, Any]):
+        """处理 Redis 消息"""
+        try:
+            # data = json.loads(message)
             
             device_id = data.get('device_id', 'unknown')
             timestamp = data.get('timestamp', 'unknown')
@@ -399,6 +480,11 @@ class WebSocketRedisBridge:
                 if not client.is_alive():
                     clients_to_remove.append(client_id)
                     continue
+                
+                # 检查订阅类型
+                if client.subscription_type not in ["vital_data", "all"]:
+                    continue
+                
                 
                 # 检查设备过滤
                 if client.device_id and client.device_id != device_id:
