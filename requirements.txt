@@ -8,3 +8,4 @@ uvicorn
 
 # sms verication
 alibabacloud_dysmsapi20170525>=3.0.0
+pyjwt

@@ -8,13 +8,15 @@
 """
 
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from datetime import datetime
 import logging
 from pydantic import BaseModel
 from typing import (
-    Optional
+    Optional,
+    Dict,
+    Any
 )
 from pathlib import Path
 from fastapi.encoders import jsonable_encoder
@@ -23,6 +25,8 @@ import json
 import random
 import string
 
+from .jwt_utils import create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
+from datetime import timedelta
 
 from api.table.base.user_data import UserData
 from agent.provider.sql_provider import SqlProvider
@@ -76,9 +80,10 @@ class UserDataServer:
         """注册用户相关的路由"""
         app.get("/api/user_data")(self.get_user_data)
         app.post("/api/user_data")(self.post_user_data)
-        app.post("/api/user_data/save")(self.save_user_data)
-        app.post("/api/user_data/update")(self.update_user_data)
+        app.post("/api/user_data/save", dependencies=[Depends(get_current_user)])(self.save_user_data)
+        app.post("/api/user_data/update", dependencies=[Depends(get_current_user)])(self.update_user_data)
         app.post("/api/user_data/delete")(self.delete_user_data)
+        # app.post("/api/user_data/delete", dependencies=[Depends(get_current_user)])(self.delete_user_data)
         app.post("/api/user_data/login")(self.login_user)  # 新增登录接口
         app.post("/api/user_data/verication_and_save_user")(self.verication_and_save_user)  # 新增登录接口
 
@@ -217,7 +222,12 @@ class UserDataServer:
             if phone_response:
                 return JSONResponse(
                     status_code=500,
-                    content={"success": False, "message": f"用户{list_user_data.phone}已经存在！", "timestamp": datetime.now().isoformat()}
+                    content={
+                        "success": False, 
+                        "message": f"用户{list_user_data.phone}已经存在！",
+                        "data": phone_response,
+                        "timestamp": datetime.now().isoformat()
+                    }
                 )
             
             
@@ -283,7 +293,12 @@ class UserDataServer:
             if response:
                 return JSONResponse(
                     status_code=400,
-                    content={"success": False, "message": f"用户{list_user_data.user_name}已经存在！", "timestamp": datetime.now().isoformat()}
+                    content={
+                        "success": False, 
+                        "message": f"用户{list_user_data.user_name}已经存在！", 
+                        "data": response,
+                        "timestamp": datetime.now().isoformat()
+                    }
                 )
             
             # 准备插入数据
@@ -291,8 +306,8 @@ class UserDataServer:
                 "user_name": list_user_data.user_name,
                 "password": list_user_data.password,
                 "full_name": list_user_data.full_name,
-                "create_time": datetime.now(),
-                "update_time": datetime.now()
+                "create_time": datetime.now().isoformat(),
+                "update_time": datetime.now().isoformat()
             }
             
             # 可选字段处理
@@ -341,7 +356,12 @@ class UserDataServer:
             if result:
                 return JSONResponse(
                     status_code=200,
-                    content={"success": True, "message": f"用户保存成功", "data": str(result), "timestamp": datetime.now().isoformat()}
+                    content={
+                        "success": True, 
+                        "message": f"用户保存成功", 
+                        "data": insert_data, 
+                        "timestamp": datetime.now().isoformat()
+                    }
                 )
             else:
                 return JSONResponse(
@@ -375,31 +395,50 @@ class UserDataServer:
                 return JSONResponse(
                     status_code=500,
                     content={"success": False, "message": f"验证码错误", "timestamp": datetime.now().isoformat()}
-                ) 
+                )
             
             check_exists_response = await self.post_user_data(ListUserData(phone=sms_verify_request.phone))
             check_exists_response_result = utils.parse_server_return(check_exists_response)
-            if check_exists_response_result:
-                return JSONResponse(
-                    status_code=500,
-                    content={"success": True, "message": f"登录用户已存在！", "timestamp": datetime.now().isoformat()}
-                )
-                
-            save_repsonse = await self.save_user_data(ListUserData(phone=sms_verify_request.phone))
+            if not check_exists_response_result:
+                save_repsonse = await self.save_user_data(ListUserData(phone=sms_verify_request.phone))
+                check_exists_response_result = utils.parse_server_return(save_repsonse)
+            else:
+                check_exists_response_result = check_exists_response_result[0] if len(check_exists_response_result) > 0 else {}
+            
+            print(f"check_exists_response_result: {check_exists_response_result}")
+            # 生成token
+            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = create_access_token(
+                data={"sub": check_exists_response_result["user_name"], "id": check_exists_response_result["id"], "role": check_exists_response_result["role"]},
+                expires_delta=access_token_expires
+            )
+            
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "success": True,
+                    "message": "登录成功",
+                    "data": {
+                        "access_token": access_token,
+                        "token_type": "bearer",
+                        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+                        "user_info": check_exists_response_result
+                    },
+                    "timestamp": datetime.now().isoformat()
+                }
+            )
             
         except Exception as e:
             return JSONResponse(
                 status_code=500,
                 content={"success": False, "message": f"fail to exec verication and save user function {str(e)}", "timestamp": datetime.now().isoformat()}
             )
-        return save_repsonse
-        
-        
 
 
     async def update_user_data(
         self,
         list_user_data: ListUserData,
+        current_user: Dict[str, Any] = Depends(get_current_user)
     ):
         """
         POST请求 - 更新用户数据
@@ -414,11 +453,25 @@ class UserDataServer:
                     status_code=400,
                     content={"success": False, "message": "请提供用户名或id", "timestamp": datetime.now().isoformat()}
                 )
+                
+            # 此处可新增判断用户名和id不一致的情形
             response_str_title = f"用户：{list_user_data.user_name}" if list_user_data.user_name else f"用户id：{list_user_data.id}"
+            
+            role = current_user["role"]
+            if role != "admin":
+                if list_user_data.id and list_user_data.id != current_user["id"]:
+                    return JSONResponse(
+                    status_code=403,
+                    content={"success": False, "message": "无权限修改该用户数据", "timestamp": datetime.now().isoformat()}
+                )
+                if list_user_data.user_name and list_user_data.user_name != current_user["user_name"]:
+                    return JSONResponse(
+                    status_code=403,
+                    content={"success": False, "message": "无权限修改该用户数据", "timestamp": datetime.now().isoformat()}
+                )
             
             # 查询现有用户数据
             response = await self.post_user_data(list_user_data)
-            
             result = utils.parse_server_return(response)
             
             if not result:
@@ -625,11 +678,34 @@ class UserDataServer:
                     content={"success": False, "message": "密码错误", "timestamp": datetime.now().isoformat()}
                 )
             
-            # 登录成功
+            
+            # 生成token
+            access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = create_access_token(
+                data={"sub": login_data.user_name, "id": user_info["id"], "role": user_info["role"]},
+                expires_delta=access_token_expires
+            )
+            
             return JSONResponse(
                 status_code=200,
-                content={"success": True, "message": "登录成功", "data": {"user_name": user_info["user_name"], "full_name": user_info["full_name"]}, "timestamp": datetime.now().isoformat()}
+                content={
+                    "success": True,
+                    "message": "登录成功",
+                    "data": {
+                        "access_token": access_token,
+                        "token_type": "bearer",
+                        "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+                        "user_info": user_info
+                    },
+                    "timestamp": datetime.now().isoformat()
+                }
             )
+            
+            # 登录成功
+            # return JSONResponse(
+            #     status_code=200,
+            #     content={"success": True, "message": "登录成功", "data": {"user_name": user_info["user_name"], "full_name": user_info["full_name"]}, "timestamp": datetime.now().isoformat()}
+            # )
             
         except Exception as e:
             import traceback
@@ -642,7 +718,8 @@ class UserDataServer:
             if sql_provider:
                 await sql_provider.close()
                 await asyncio.sleep(0.1)
-    
+
+
 if __name__ == '__main__':
     from pathlib import Path
     import asyncio
